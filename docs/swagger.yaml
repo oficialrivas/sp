@@ -1,0 +1,3314 @@
+basePath: /
+definitions:
+  controllers.AccessRequest:
+    properties:
+      entity_id:
+        type: string
+      entity_type:
+        type: string
+      expires_at:
+        type: string
+      user_id:
+        type: string
+    required:
+    - entity_id
+    - entity_type
+    - expires_at
+    - user_id
+    type: object
+  controllers.AddAreaRequest:
+    properties:
+      area:
+        type: string
+    required:
+    - area
+    type: object
+  controllers.AreaModalidadCount:
+    properties:
+      area:
+        type: string
+      casos:
+        items:
+          $ref: '#/definitions/controllers.ModalidadCount'
+        type: array
+      iios:
+        items:
+          $ref: '#/definitions/controllers.ModalidadCount'
+        type: array
+    type: object
+  controllers.ErrorResponse:
+    properties:
+      error:
+        type: string
+    type: object
+  controllers.ModalidadCount:
+    properties:
+      count:
+        type: integer
+      modalidad:
+        type: string
+    type: object
+  controllers.OTPResponse:
+    properties:
+      otp_url:
+        type: string
+    type: object
+  controllers.PeriodRequestParams:
+    properties:
+      end_date:
+        type: string
+      start_date:
+        type: string
+    required:
+    - end_date
+    - start_date
+    type: object
+  controllers.RecordsCountByArea:
+    properties:
+      area:
+        type: string
+      casos_count:
+        type: integer
+      direcciones_count:
+        type: integer
+      documentos_count:
+        type: integer
+      empresas_count:
+        type: integer
+      iios_count:
+        type: integer
+      personas_count:
+        type: integer
+      vehiculos_count:
+        type: integer
+    type: object
+  controllers.RemoveAreaRequest:
+    properties:
+      area:
+        type: string
+    required:
+    - area
+    type: object
+  controllers.RequestParams:
+    properties:
+      area:
+        type: string
+      end_date:
+        type: string
+      start_date:
+        type: string
+    required:
+    - area
+    - end_date
+    - start_date
+    type: object
+  controllers.SuccessResponse:
+    properties:
+      message:
+        type: string
+    type: object
+  controllers.UpdateAreaRequest:
+    properties:
+      new_area:
+        type: string
+      old_area:
+        type: string
+    required:
+    - new_area
+    - old_area
+    type: object
+  controllers.UpdatePasswordRequest:
+    properties:
+      new_password:
+        type: string
+      old_password:
+        type: string
+      otp:
+        type: string
+    type: object
+  controllers.UserAreaModalidadCount:
+    properties:
+      area:
+        type: string
+      casos:
+        items:
+          $ref: '#/definitions/controllers.ModalidadCount'
+        type: array
+      iios:
+        items:
+          $ref: '#/definitions/controllers.ModalidadCount'
+        type: array
+    type: object
+  controllers.UserPeriodRequestParams:
+    properties:
+      end_date:
+        type: string
+      start_date:
+        type: string
+      user_id:
+        type: string
+    required:
+    - end_date
+    - start_date
+    - user_id
+    type: object
+  models.Caso:
+    properties:
+      area:
+        type: string
+      codigo:
+        type: string
+      created_at:
+        type: string
+      direcciones:
+        items:
+          $ref: '#/definitions/models.Direccion'
+        type: array
+      documento:
+        items:
+          $ref: '#/definitions/models.Documento'
+        type: array
+      empresas:
+        items:
+          $ref: '#/definitions/models.Empresa'
+        type: array
+      id:
+        type: string
+      iio:
+        items:
+          $ref: '#/definitions/models.IIO'
+        type: array
+      modalidad:
+        type: string
+      nombre:
+        type: string
+      relacion:
+        items:
+          $ref: '#/definitions/models.Persona'
+        type: array
+      tie:
+        type: string
+      tipo:
+        type: string
+      updated_at:
+        type: string
+      userID:
+        type: string
+      users:
+        items:
+          $ref: '#/definitions/models.User'
+        type: array
+      vanalista:
+        type: integer
+      vcoordinador:
+        type: integer
+      vdirector:
+        type: integer
+      vehiculos:
+        items:
+          $ref: '#/definitions/models.Vehiculo'
+        type: array
+    type: object
+  models.Correo:
+    properties:
+      area:
+        type: string
+      created_at:
+        type: string
+      direccion:
+        type: string
+      dueno:
+        $ref: '#/definitions/models.Persona'
+      dueno_id:
+        type: string
+      id:
+        type: string
+      tipo:
+        type: string
+      updated_at:
+        type: string
+      userID:
+        type: string
+    type: object
+  models.CreateUserRequest:
+    properties:
+      apellido:
+        type: string
+      area:
+        type: string
+      cedula:
+        type: string
+      correo:
+        type: string
+      credencial:
+        type: string
+      nivel:
+        type: string
+      nombre:
+        type: string
+      password:
+        type: string
+      redi:
+        type: string
+      telefono:
+        type: string
+      tie:
+        type: string
+    type: object
+  models.Direccion:
+    properties:
+      area:
+        type: string
+      created_at:
+        type: string
+      dueno:
+        $ref: '#/definitions/models.Persona'
+      dueno_id:
+        type: string
+      empleados:
+        items:
+          $ref: '#/definitions/models.Persona'
+        type: array
+      estado:
+        type: string
+      id:
+        type: string
+      lugar:
+        type: string
+      municipio:
+        type: string
+      nombre:
+        type: string
+      parroquia:
+        type: string
+      updated_at:
+        type: string
+      urbanizacion:
+        type: string
+      userID:
+        type: string
+      usuarios:
+        items:
+          $ref: '#/definitions/models.Persona'
+        type: array
+    type: object
+  models.Documento:
+    properties:
+      area:
+        type: string
+      codigo:
+        type: string
+      created_at:
+        type: string
+      documento:
+        type: string
+      id:
+        type: string
+      nombre:
+        type: string
+      numero:
+        type: string
+      relacion:
+        items:
+          $ref: '#/definitions/models.Persona'
+        type: array
+      tipo:
+        type: string
+      updated_at:
+        type: string
+      userID:
+        type: string
+    type: object
+  models.Empresa:
+    properties:
+      actividad_economica:
+        type: string
+      area:
+        type: string
+      created_at:
+        type: string
+      direccion:
+        type: string
+      empleados:
+        items:
+          $ref: '#/definitions/models.Persona'
+        type: array
+      id:
+        type: string
+      nombre:
+        type: string
+      representante:
+        $ref: '#/definitions/models.Persona'
+      representante_id:
+        type: string
+      rif:
+        type: string
+      socios:
+        items:
+          $ref: '#/definitions/models.Persona'
+        type: array
+      updated_at:
+        type: string
+      userID:
+        type: string
+    type: object
+  models.ErrorResponse:
+    properties:
+      error:
+        type: string
+    type: object
+  models.IIO:
+    properties:
+      area:
+        type: string
+      created_at:
+        type: string
+      descripcion:
+        type: string
+      fecha:
+        type: string
+      id:
+        type: string
+      imagen_url:
+        type: string
+      lugar:
+        type: string
+      modalidad:
+        type: string
+      nivel:
+        type: string
+      nombre:
+        type: string
+      parroquia:
+        type: string
+      redi:
+        type: string
+      relacion:
+        items:
+          $ref: '#/definitions/models.Persona'
+        type: array
+      tie:
+        type: string
+      updated_at:
+        type: string
+      urbanizacion:
+        type: string
+      userID:
+        type: string
+      verificada:
+        type: boolean
+      zodi:
+        type: string
+    type: object
+  models.LoginRequest:
+    properties:
+      correo:
+        type: string
+      password:
+        type: string
+    required:
+    - correo
+    - password
+    type: object
+  models.Nacionalidad:
+    properties:
+      area:
+        type: string
+      created_at:
+        type: string
+      gentilicio:
+        type: string
+      id:
+        type: string
+      updated_at:
+        type: string
+      userID:
+        type: string
+    type: object
+  models.Pasaporte:
+    properties:
+      area:
+        type: string
+      codigo:
+        type: string
+      created_at:
+        type: string
+      foto:
+        type: string
+      id:
+        type: string
+      numero:
+        type: string
+      pais:
+        type: string
+      representante:
+        $ref: '#/definitions/models.Persona'
+      representante_id:
+        type: string
+      tipo:
+        type: string
+      updated_at:
+        type: string
+      userID:
+        type: string
+    type: object
+  models.Persona:
+    properties:
+      alias:
+        type: string
+      apellido:
+        type: string
+      area:
+        type: string
+      cargo_actual:
+        type: string
+      cedula:
+        type: string
+      correo:
+        type: string
+      correos:
+        items:
+          $ref: '#/definitions/models.Correo'
+        type: array
+      created_at:
+        type: string
+      direcciones:
+        items:
+          $ref: '#/definitions/models.Direccion'
+        type: array
+      empresas:
+        items:
+          $ref: '#/definitions/models.Empresa'
+        type: array
+      estado_civil:
+        type: string
+      filiacion_politica:
+        type: string
+      id:
+        type: string
+      ideologia:
+        type: string
+      iio:
+        items:
+          $ref: '#/definitions/models.IIO'
+        type: array
+      informacion_de_interes:
+        type: string
+      nacionalidad:
+        items:
+          $ref: '#/definitions/models.Nacionalidad'
+        type: array
+      nombre:
+        type: string
+      pasaporte:
+        items:
+          $ref: '#/definitions/models.Pasaporte'
+        type: array
+      profesion:
+        type: string
+      redes:
+        items:
+          $ref: '#/definitions/models.Redes'
+        type: array
+      relacionados:
+        items:
+          $ref: '#/definitions/models.Persona'
+        type: array
+      religion:
+        type: string
+      telefono:
+        type: string
+      tipo_perfil:
+        type: string
+      updated_at:
+        type: string
+      userID:
+        type: string
+      valoraciones:
+        type: string
+      vehiculos:
+        items:
+          $ref: '#/definitions/models.Vehiculo'
+        type: array
+      visa:
+        items:
+          $ref: '#/definitions/models.Visa'
+        type: array
+    type: object
+  models.Redes:
+    properties:
+      area:
+        type: string
+      created_at:
+        type: string
+      direccion:
+        type: string
+      dueno:
+        $ref: '#/definitions/models.Persona'
+      dueno_id:
+        type: string
+      id:
+        type: string
+      tipo:
+        type: string
+      updated_at:
+        type: string
+      userID:
+        type: string
+    type: object
+  models.RefreshTokenRequest:
+    properties:
+      refreshToken:
+        type: string
+    required:
+    - refreshToken
+    type: object
+  models.SuccessResponse:
+    properties:
+      message:
+        type: string
+    type: object
+  models.TemporaryAccess:
+    properties:
+      created_at:
+        type: string
+      entity_id:
+        type: string
+      entity_type:
+        type: string
+      expires_at:
+        type: string
+      id:
+        type: string
+      updated_at:
+        type: string
+      user_id:
+        type: string
+    type: object
+  models.TokenResponse:
+    properties:
+      accessToken:
+        type: string
+      id:
+        type: string
+      refreshToken:
+        description: Optional Refresh Token
+        type: string
+    type: object
+  models.User:
+    properties:
+      apellido:
+        type: string
+      area:
+        type: string
+      cedula:
+        type: string
+      correo:
+        type: string
+      created_at:
+        type: string
+      credencial:
+        type: string
+      hash:
+        type: string
+      id:
+        type: string
+      nivel:
+        type: string
+      nombre:
+        type: string
+      otp_secret:
+        type: string
+      redi:
+        type: string
+      telefono:
+        type: string
+      tie:
+        type: string
+      updated_at:
+        type: string
+    type: object
+  models.Vehiculo:
+    properties:
+      area:
+        type: string
+      año:
+        type: string
+      color:
+        type: string
+      created_at:
+        type: string
+      id:
+        type: string
+      linea:
+        type: string
+      marca:
+        type: string
+      matricula:
+        type: string
+      modelo:
+        type: string
+      numero:
+        type: string
+      propietario:
+        items:
+          $ref: '#/definitions/models.Persona'
+        type: array
+      tipo:
+        type: string
+      updated_at:
+        type: string
+      userID:
+        type: string
+      usuarios:
+        items:
+          $ref: '#/definitions/models.Persona'
+        type: array
+      vehiculo:
+        items:
+          $ref: '#/definitions/models.IIO'
+        type: array
+    type: object
+  models.Visa:
+    properties:
+      aprobada:
+        type: boolean
+      area:
+        type: string
+      codigo:
+        type: string
+      created_at:
+        type: string
+      id:
+        type: string
+      pais:
+        type: string
+      representante:
+        $ref: '#/definitions/models.Persona'
+      representante_id:
+        type: string
+      tipo:
+        type: string
+      updated_at:
+        type: string
+      userID:
+        type: string
+      valoracion:
+        type: string
+    type: object
+host: localhost:8080
+info:
+  contact: {}
+  description: API SISTEMA DE EXPLORACION POPULAR.
+  title: API
+  version: "1.0"
+paths:
+  /casos:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Bearer token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: Datos del caso
+        in: body
+        name: caso
+        required: true
+        schema:
+          $ref: '#/definitions/models.Caso'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.Caso'
+        "400":
+          description: error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Crea un nuevo caso
+      tags:
+      - Caso
+  /casos/{id}:
+    delete:
+      parameters:
+      - description: Bearer token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: ID del caso a eliminar
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: Caso eliminado exitosamente
+        "404":
+          description: error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Elimina un caso por su ID
+      tags:
+      - Caso
+    get:
+      parameters:
+      - description: Bearer token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: ID del caso
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Caso'
+        "404":
+          description: error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Obtiene un caso por su ID
+      tags:
+      - Caso
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: Bearer token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: ID del caso a actualizar
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Datos del caso a actualizar
+        in: body
+        name: caso
+        required: true
+        schema:
+          $ref: '#/definitions/models.Caso'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Caso'
+        "400":
+          description: error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Actualiza un caso existente por su ID
+      tags:
+      - Caso
+  /casos/valorar/{id}:
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: Bearer token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: ID del caso
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Valoración
+        in: body
+        name: valor
+        required: true
+        schema:
+          type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Caso'
+        "400":
+          description: error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "403":
+          description: error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Valorar un caso
+      tags:
+      - Caso
+  /configuracion/acceso-temporal:
+    post:
+      consumes:
+      - application/json
+      description: Otorga acceso temporal a un usuario de otra área a una entidad
+        específica
+      parameters:
+      - description: Bearer token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: Datos de acceso temporal
+        in: body
+        name: access
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.AccessRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.TemporaryAccess'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Otorga acceso temporal a un usuario a una entidad específica
+      tags:
+      - configuracion
+  /configuracion/area:
+    delete:
+      consumes:
+      - application/json
+      description: Elimina un área de la lista de áreas válidas
+      parameters:
+      - description: Bearer token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: Nombre del área
+        in: body
+        name: area
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.RemoveAreaRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.SuccessResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Elimina un área
+      tags:
+      - configuracion
+    post:
+      consumes:
+      - application/json
+      description: Agrega un área nueva a la lista de áreas válidas
+      parameters:
+      - description: Bearer token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: Nombre del área
+        in: body
+        name: area
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.AddAreaRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.SuccessResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Agrega un área nueva
+      tags:
+      - configuracion
+    put:
+      consumes:
+      - application/json
+      description: Actualiza el nombre de un área en la lista de áreas válidas
+      parameters:
+      - description: Bearer token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: Datos del área
+        in: body
+        name: area
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.UpdateAreaRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.SuccessResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Actualiza un área
+      tags:
+      - configuracion
+  /correos:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Datos de la dirección a crear
+        in: body
+        name: correo
+        required: true
+        schema:
+          $ref: '#/definitions/models.Correo'
+      - description: Bearer token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: Tipo del correo
+        in: body
+        name: tipo
+        required: true
+        schema:
+          type: string
+      - description: Área del correo
+        in: body
+        name: area
+        required: true
+        schema:
+          type: string
+      - description: Dirección del correo
+        in: body
+        name: direccion
+        required: true
+        schema:
+          type: string
+      - description: ID del representante
+        in: body
+        name: representante_id
+        required: true
+        schema:
+          type: string
+      - description: ID del usuario
+        in: body
+        name: user_id
+        required: true
+        schema:
+          type: string
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.Correo'
+      summary: Crea un nuevo correo
+      tags:
+      - Correo
+  /correos/{id}:
+    delete:
+      parameters:
+      - description: Bearer token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: ID del correo a eliminar
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.Correo'
+        "204":
+          description: Correo eliminado exitosamente
+      summary: Elimina un correo por su ID
+      tags:
+      - Correo
+    get:
+      parameters:
+      - description: Bearer token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: ID del correo
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Correo'
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.Correo'
+      summary: Obtiene un correo por su ID
+      tags:
+      - Correo
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: Datos del correo a actualizar
+        in: body
+        name: direccion
+        required: true
+        schema:
+          $ref: '#/definitions/models.Correo'
+      - description: Bearer token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: ID del correo a actualizar
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Tipo del correo
+        in: body
+        name: tipo
+        required: true
+        schema:
+          type: string
+      - description: Área del correo
+        in: body
+        name: area
+        required: true
+        schema:
+          type: string
+      - description: Dirección del correo
+        in: body
+        name: direccion
+        required: true
+        schema:
+          type: string
+      - description: ID del representante
+        in: body
+        name: representante_id
+        required: true
+        schema:
+          type: string
+      - description: ID del usuario
+        in: body
+        name: user_id
+        required: true
+        schema:
+          type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Correo'
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.Correo'
+      summary: Actualiza un correo existente por su ID
+      tags:
+      - Correo
+  /direcciones:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Bearer token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: Datos de la dirección a crear
+        in: body
+        name: direccion
+        required: true
+        schema:
+          $ref: '#/definitions/models.Direccion'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.Direccion'
+      summary: Crea una nueva dirección
+      tags:
+      - Direccion
+  /direcciones/{id}:
+    delete:
+      parameters:
+      - description: Bearer token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: ID de la dirección a eliminar
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: Dirección eliminada exitosamente
+      summary: Elimina una dirección por su ID
+      tags:
+      - Direccion
+    get:
+      parameters:
+      - description: Bearer token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: ID de la dirección
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Direccion'
+      summary: Obtiene una dirección por su ID
+      tags:
+      - Direccion
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: Bearer token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: ID de la dirección a actualizar
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Datos de la dirección a actualizar
+        in: body
+        name: direccion
+        required: true
+        schema:
+          $ref: '#/definitions/models.Direccion'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Direccion'
+      summary: Actualiza una dirección existente por su ID
+      tags:
+      - Direccion
+  /documentos:
+    post:
+      consumes:
+      - multipart/form-data
+      parameters:
+      - description: Bearer token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: Número del documento
+        in: formData
+        name: numero
+        required: true
+        type: string
+      - description: Archivo del documento
+        in: formData
+        name: documento
+        type: file
+      - description: Nombre del documento
+        in: formData
+        name: nombre
+        required: true
+        type: string
+      - description: Tipo del documento
+        in: formData
+        name: tipo
+        required: true
+        type: string
+      - description: Código único del documento
+        in: formData
+        name: codigo
+        required: true
+        type: string
+      - description: Nivel del documento
+        in: formData
+        name: nivel
+        required: true
+        type: string
+      - description: ID del usuario
+        in: formData
+        name: user_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.Documento'
+      summary: Crea un nuevo documento
+      tags:
+      - Documento
+  /documentos/{id}:
+    delete:
+      parameters:
+      - description: Bearer token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: ID del documento a eliminar
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: Documento eliminado exitosamente
+      summary: Elimina un documento por su ID
+      tags:
+      - Documento
+    get:
+      parameters:
+      - description: Bearer token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: ID del documento
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Documento'
+      summary: Obtiene un documento por su ID
+      tags:
+      - Documento
+    put:
+      consumes:
+      - multipart/form-data
+      parameters:
+      - description: Bearer token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: ID del documento a actualizar
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Número del documento
+        in: formData
+        name: numero
+        required: true
+        type: string
+      - description: Archivo del documento
+        in: formData
+        name: documento
+        type: file
+      - description: Nombre del documento
+        in: formData
+        name: nombre
+        required: true
+        type: string
+      - description: Tipo del documento
+        in: formData
+        name: tipo
+        required: true
+        type: string
+      - description: Código único del documento
+        in: formData
+        name: codigo
+        required: true
+        type: string
+      - description: Nivel del documento
+        in: formData
+        name: nivel
+        required: true
+        type: string
+      - description: ID del usuario
+        in: formData
+        name: user_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Documento'
+      summary: Actualiza un documento existente por su ID
+      tags:
+      - Documento
+  /empresas:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Bearer token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: Datos de la empresa a crear
+        in: body
+        name: empresa
+        required: true
+        schema:
+          $ref: '#/definitions/models.Empresa'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.Empresa'
+      security:
+      - BearerAuth: []
+      summary: Crea una nueva empresa
+      tags:
+      - Empresa
+  /empresas/{id}:
+    delete:
+      parameters:
+      - description: Bearer token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: ID de la empresa a eliminar
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: Empresa eliminada exitosamente
+      summary: Elimina una empresa por su ID
+      tags:
+      - Empresa
+    get:
+      parameters:
+      - description: Bearer token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: ID de la empresa
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Empresa'
+      summary: Obtiene una empresa por su ID
+      tags:
+      - Empresa
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: Bearer token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: ID de la empresa a actualizar
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Datos de la empresa a actualizar
+        in: body
+        name: empresa
+        required: true
+        schema:
+          $ref: '#/definitions/models.Empresa'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Empresa'
+      summary: Actualiza una empresa existente por su ID
+      tags:
+      - Empresa
+  /empresas/search:
+    get:
+      parameters:
+      - description: Bearer token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: RIF de la empresa
+        in: query
+        name: rif
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Empresa'
+      summary: Obtiene una empresa por su RIF
+      tags:
+      - Empresa
+  /gestion:
+    post:
+      consumes:
+      - application/json
+      description: Obtiene el número de registros para un área específica en un período
+        determinado
+      parameters:
+      - description: Parámetros de consulta
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.RequestParams'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Devuelve el número de registros de un área en un período específico
+      tags:
+      - Registros
+  /gestion/area-modalidad:
+    post:
+      consumes:
+      - application/json
+      description: Obtiene el número de registros por área y modalidad en un período
+        determinado
+      parameters:
+      - description: Parámetros de consulta
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.PeriodRequestParams'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/controllers.AreaModalidadCount'
+            type: array
+        "400":
+          description: error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Devuelve el número de registros por área y modalidad en un período
+        específico
+      tags:
+      - Registros
+  /gestion/por-area:
+    post:
+      consumes:
+      - application/json
+      description: Obtiene el número de registros por área en un período determinado
+      parameters:
+      - description: Parámetros de consulta
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.PeriodRequestParams'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/controllers.RecordsCountByArea'
+            type: array
+        "400":
+          description: error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Devuelve el número de registros por área en un período específico
+      tags:
+      - Registros
+  /gestion/user:
+    post:
+      consumes:
+      - application/json
+      description: Obtiene el número de registros para un área específica en un período
+        determinado para un usuario específico
+      parameters:
+      - description: Parámetros de consulta
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.UserPeriodRequestParams'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Devuelve el número de registros de un área en un período específico
+        para un usuario específico
+      tags:
+      - Registros
+  /gestion/user-area-modalidad:
+    post:
+      consumes:
+      - application/json
+      description: Obtiene el número de registros por área y modalidad en un período
+        determinado para un usuario específico
+      parameters:
+      - description: Parámetros de consulta
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.UserPeriodRequestParams'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/controllers.UserAreaModalidadCount'
+            type: array
+        "400":
+          description: error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Devuelve el número de registros por área y modalidad en un período
+        específico para un usuario específico
+      tags:
+      - Registros
+  /iios:
+    get:
+      consumes:
+      - application/json
+      description: Obtiene todos los registros de IIO
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.IIO'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Obtiene todas las IIOs
+      tags:
+      - iio
+    post:
+      consumes:
+      - multipart/form-data
+      description: Crea un nuevo registro de IIO con los datos proporcionados
+      parameters:
+      - description: Bearer token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: Descripción del IIO
+        in: formData
+        name: descripcion
+        required: true
+        type: string
+      - description: Fecha del IIO (YYYY-MM-DD)
+        in: formData
+        name: fecha
+        required: true
+        type: string
+      - description: Lugar del IIO
+        in: formData
+        name: lugar
+        required: true
+        type: string
+      - description: Modalidad del IIO
+        in: formData
+        name: modalidad
+        required: true
+        type: string
+      - description: Nombre del IIO
+        in: formData
+        name: nombre
+        required: true
+        type: string
+      - description: Parroquia del IIO
+        in: formData
+        name: parroquia
+        required: true
+        type: string
+      - description: REDI del IIO
+        in: formData
+        name: redi
+        required: true
+        type: string
+      - description: ZODI del IIO
+        in: formData
+        name: zodi
+        required: true
+        type: string
+      - description: TIE del IIO
+        in: formData
+        name: tie
+        required: true
+        type: string
+      - description: Área del IIO
+        in: formData
+        name: area
+        required: true
+        type: string
+      - description: Imagen del IIO
+        in: formData
+        name: imagen
+        type: file
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.IIO'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Crea un nuevo registro de IIO
+      tags:
+      - iio
+  /iios/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Elimina un IIO por su ID
+      parameters:
+      - description: Bearer token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: ID del IIO
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Elimina un IIO por su ID
+      tags:
+      - iio
+    get:
+      consumes:
+      - application/json
+      description: Obtiene los datos de un IIO por su ID
+      parameters:
+      - description: Bearer token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: ID del IIO
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.IIO'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Obtiene un IIO por su ID
+      tags:
+      - iio
+    put:
+      consumes:
+      - application/json
+      description: Actualiza los datos de un IIO existente
+      parameters:
+      - description: Bearer token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: ID del IIO
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Datos del IIO actualizados
+        in: body
+        name: iio
+        required: true
+        schema:
+          $ref: '#/definitions/models.IIO'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.IIO'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Actualiza un IIO existente
+      tags:
+      - iio
+  /iios/filter:
+    get:
+      consumes:
+      - application/json
+      description: Obtiene registros de IIO en un periodo específico, y filtrados
+        por tie, redi, zodi y modalidad
+      parameters:
+      - description: Bearer token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: Fecha de inicio (YYYY-MM-DD)
+        in: query
+        name: start_date
+        type: string
+      - description: Fecha de fin (YYYY-MM-DD)
+        in: query
+        name: end_date
+        type: string
+      - description: TIE
+        in: query
+        name: tie
+        type: string
+      - description: REDI
+        in: query
+        name: redi
+        type: string
+      - description: ZODI
+        in: query
+        name: zodi
+        type: string
+      - description: Modalidad
+        in: query
+        name: modalidad
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.IIO'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Obtiene IIOs filtrados
+      tags:
+      - iio
+  /login:
+    post:
+      consumes:
+      - application/json
+      description: Autentica a un usuario con correo y contraseña, y genera un token
+        JWT
+      parameters:
+      - description: Credenciales de inicio de sesión
+        in: body
+        name: credentials
+        required: true
+        schema:
+          $ref: '#/definitions/models.LoginRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.TokenResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      summary: Autentica a un usuario
+      tags:
+      - users
+  /pasaportes:
+    post:
+      consumes:
+      - multipart/form-data
+      parameters:
+      - description: Bearer token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: Número del pasaporte
+        in: formData
+        name: numero
+        required: true
+        type: string
+      - description: Foto del pasaporte
+        in: formData
+        name: foto
+        type: file
+      - description: País del pasaporte
+        in: formData
+        name: pais
+        required: true
+        type: string
+      - description: Tipo del pasaporte
+        in: formData
+        name: tipo
+        required: true
+        type: string
+      - description: Código único del pasaporte
+        in: formData
+        name: codigo
+        required: true
+        type: string
+      - description: ID del representante
+        in: formData
+        name: representante_id
+        required: true
+        type: string
+      - description: Nivel del pasaporte
+        in: formData
+        name: nivel
+        required: true
+        type: string
+      - description: ID del usuario
+        in: formData
+        name: user_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.Pasaporte'
+      summary: Crea un nuevo pasaporte
+      tags:
+      - Pasaporte
+  /pasaportes/{id}:
+    delete:
+      parameters:
+      - description: Bearer token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: ID del pasaporte a eliminar
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: Pasaporte eliminado exitosamente
+      summary: Elimina un pasaporte por su ID
+      tags:
+      - Pasaporte
+    get:
+      parameters:
+      - description: Bearer token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: ID del pasaporte
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Pasaporte'
+      summary: Obtiene un pasaporte por su ID
+      tags:
+      - Pasaporte
+    put:
+      consumes:
+      - multipart/form-data
+      parameters:
+      - description: Bearer token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: ID del pasaporte a actualizar
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Número del pasaporte
+        in: formData
+        name: numero
+        required: true
+        type: string
+      - description: Foto del pasaporte
+        in: formData
+        name: foto
+        type: file
+      - description: País del pasaporte
+        in: formData
+        name: pais
+        required: true
+        type: string
+      - description: Tipo del pasaporte
+        in: formData
+        name: tipo
+        required: true
+        type: string
+      - description: Código único del pasaporte
+        in: formData
+        name: codigo
+        required: true
+        type: string
+      - description: ID del representante
+        in: formData
+        name: representante_id
+        required: true
+        type: string
+      - description: Nivel del pasaporte
+        in: formData
+        name: nivel
+        required: true
+        type: string
+      - description: ID del usuario
+        in: formData
+        name: user_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Pasaporte'
+      summary: Actualiza un pasaporte existente por su ID
+      tags:
+      - Pasaporte
+  /personas:
+    get:
+      consumes:
+      - application/json
+      description: Obtiene los datos de todos los Personas
+      parameters:
+      - description: Bearer token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Persona'
+            type: array
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Obtiene todos los Personas
+      tags:
+      - persona
+    post:
+      consumes:
+      - application/json
+      description: Crea un nuevo registro de Persona con los datos proporcionados
+      parameters:
+      - description: Bearer token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: Datos del Persona
+        in: body
+        name: persona
+        required: true
+        schema:
+          $ref: '#/definitions/models.Persona'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Persona'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Crea un nuevo registro de Persona
+      tags:
+      - persona
+  /personas/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Elimina un Persona por su ID
+      parameters:
+      - description: Bearer token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: ID del Persona
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Elimina un Persona por su ID
+      tags:
+      - persona
+    get:
+      consumes:
+      - application/json
+      description: Obtiene los datos de un Persona por su ID
+      parameters:
+      - description: Bearer token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: ID del Persona
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Persona'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Obtiene un Persona por su ID
+      tags:
+      - persona
+    put:
+      consumes:
+      - application/json
+      description: Actualiza los datos de un Persona existente
+      parameters:
+      - description: Bearer token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: ID del Persona
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Datos del Persona actualizados
+        in: body
+        name: persona
+        required: true
+        schema:
+          $ref: '#/definitions/models.Persona'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Persona'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Actualiza un Persona existente
+      tags:
+      - persona
+  /personas/cedula/{cedula}:
+    get:
+      consumes:
+      - application/json
+      description: Obtiene los datos de un Persona por su número de cédula
+      parameters:
+      - description: Bearer token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: Cédula del Persona
+        in: path
+        name: cedula
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Persona'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Obtiene un Persona por su número de cédula
+      tags:
+      - persona
+  /personas/cedulas:
+    get:
+      consumes:
+      - application/json
+      description: Obtiene los datos de personas por una lista de cédulas
+      parameters:
+      - description: Bearer token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: Lista de cédulas separadas por comas
+        in: query
+        name: cedulas
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Persona'
+            type: array
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Obtiene personas por una lista de cédulas
+      tags:
+      - persona
+  /personas/nacionalidad/{nacionalidad}:
+    get:
+      consumes:
+      - application/json
+      description: Obtiene los datos de todos los Personas que pertenecen a una nacionalidad
+        específica
+      parameters:
+      - description: Bearer token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: Nacionalidad de los Personas
+        in: path
+        name: nacionalidad
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Persona'
+            type: array
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Obtiene todos los Personas por su nacionalidad
+      tags:
+      - persona
+  /personas/nombre/{nombre}:
+    get:
+      consumes:
+      - application/json
+      description: Obtiene los datos de un Persona por su nombre
+      parameters:
+      - description: Bearer token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: Nombre del Persona
+        in: path
+        name: nombre
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Persona'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Obtiene un Persona por su nombre
+      tags:
+      - persona
+  /personas/pasaporte/{pasaporte}:
+    get:
+      consumes:
+      - application/json
+      description: Obtiene los datos de un Persona por su número de pasaporte
+      parameters:
+      - description: Bearer token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: Pasaporte del Persona
+        in: path
+        name: pasaporte
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Persona'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Obtiene un Persona por su número de pasaporte
+      tags:
+      - persona
+  /personas/search:
+    get:
+      consumes:
+      - application/json
+      description: Busca personas en la tabla persona usando un índice de texto completo
+      parameters:
+      - description: Bearer token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: Texto de búsqueda
+        in: query
+        name: query
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Persona'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      summary: Busca personas usando texto completo
+      tags:
+      - persona
+  /redes:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Datos de la red a crear
+        in: body
+        name: redes
+        required: true
+        schema:
+          $ref: '#/definitions/models.Redes'
+      - description: Bearer token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.Redes'
+      summary: Crea una nueva entrada de red
+      tags:
+      - Redes
+  /redes/{id}:
+    delete:
+      parameters:
+      - description: Bearer token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: ID de la red a eliminar
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: Red eliminada exitosamente
+      summary: Elimina una entrada de red por su ID
+      tags:
+      - Redes
+    get:
+      parameters:
+      - description: Bearer token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: ID de la red
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Redes'
+      summary: Obtiene una entrada de red por su ID
+      tags:
+      - Redes
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: Bearer token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: ID de la red a actualizar
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Datos de la red a actualizar
+        in: body
+        name: redes
+        required: true
+        schema:
+          $ref: '#/definitions/models.Redes'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Redes'
+      summary: Actualiza una entrada de red existente por su ID
+      tags:
+      - Redes
+  /refresh-token:
+    post:
+      consumes:
+      - application/json
+      description: Renueva el accessToken usando el refreshToken proporcionado
+      parameters:
+      - description: Refresh Token
+        in: body
+        name: tokens
+        required: true
+        schema:
+          $ref: '#/definitions/models.RefreshTokenRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.TokenResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      summary: Renueva el accessToken
+      tags:
+      - users
+  /signup:
+    post:
+      consumes:
+      - application/json
+      description: Crea un nuevo usuario con los datos proporcionados
+      parameters:
+      - description: Datos del usuario
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/models.CreateUserRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.User'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      summary: Crea un nuevo usuario
+      tags:
+      - users
+  /users:
+    get:
+      consumes:
+      - application/json
+      - multipart/form-data
+      description: Obtiene una lista de todos los usuarios
+      parameters:
+      - description: Bearer token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.User'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Obtiene todos los usuarios
+      tags:
+      - users
+  /users/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Borra un usuario de la base de datos por su ID
+      parameters:
+      - description: Bearer token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: ID del usuario
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.SuccessResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Borra un usuario por su ID
+      tags:
+      - users
+    get:
+      consumes:
+      - application/json
+      description: Obtiene los datos de un usuario por su ID
+      parameters:
+      - description: Bearer token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: ID del usuario
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.User'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Obtiene un usuario por su ID
+      tags:
+      - users
+    put:
+      consumes:
+      - application/json
+      description: Actualiza los datos de un usuario por su ID
+      parameters:
+      - description: Bearer token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: ID del usuario
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Datos actualizados del usuario
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/models.CreateUserRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.User'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Actualiza un usuario por su ID
+      tags:
+      - users
+  /users/{id}/otp-setup:
+    get:
+      consumes:
+      - application/json
+      description: Genera un secreto OTP y proporciona un URL en formato QR para configurar
+        Google Authenticator
+      parameters:
+      - description: ID del usuario
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controllers.OTPResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/controllers.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/controllers.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Genera un secreto OTP y un URL para configurar Google Authenticator
+      tags:
+      - OTP
+  /users/{id}/password:
+    put:
+      consumes:
+      - application/json
+      description: Actualiza la contraseña de un usuario verificando el OTP para administradores
+      parameters:
+      - description: ID del usuario
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Datos de la solicitud para actualizar la contraseña
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.UpdatePasswordRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controllers.SuccessResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controllers.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/controllers.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/controllers.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/controllers.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Actualiza la contraseña de un usuario
+      tags:
+      - OTP
+  /vehiculos:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Bearer token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: Datos del vehículo a crear
+        in: body
+        name: vehiculo
+        required: true
+        schema:
+          $ref: '#/definitions/models.Vehiculo'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.Vehiculo'
+      summary: Crea un nuevo vehículo
+      tags:
+      - Vehiculo
+  /vehiculos/{id}:
+    delete:
+      parameters:
+      - description: Bearer token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: ID del vehículo a eliminar
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: Vehículo eliminado exitosamente
+      summary: Elimina un vehículo por su ID
+      tags:
+      - Vehiculo
+    get:
+      parameters:
+      - description: Bearer token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: ID del vehículo
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Vehiculo'
+      summary: Obtiene un vehículo por su ID
+      tags:
+      - Vehiculo
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: Bearer token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: ID del vehículo a actualizar
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Datos del vehículo a actualizar
+        in: body
+        name: vehiculo
+        required: true
+        schema:
+          $ref: '#/definitions/models.Vehiculo'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Vehiculo'
+      summary: Actualiza un vehículo existente por su ID
+      tags:
+      - Vehiculo
+  /vehiculos/search:
+    get:
+      parameters:
+      - description: Bearer token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: Matrícula del vehículo
+        in: query
+        name: matricula
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Vehiculo'
+      summary: Obtiene un vehículo por su matrícula
+      tags:
+      - Vehiculo
+  /visas:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Bearer token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: Valoración de la visa
+        in: body
+        name: valoracion
+        required: true
+        schema:
+          type: string
+      - description: País de la visa
+        in: body
+        name: pais
+        required: true
+        schema:
+          type: string
+      - description: Tipo de visa
+        in: body
+        name: tipo
+        required: true
+        schema:
+          type: string
+      - description: Código único de la visa
+        in: body
+        name: codigo
+        required: true
+        schema:
+          type: string
+      - description: ID del representante
+        in: body
+        name: representante_id
+        required: true
+        schema:
+          type: string
+      - description: Nivel de la visa
+        in: body
+        name: nivel
+        required: true
+        schema:
+          type: string
+      - description: ID del usuario
+        in: body
+        name: user_id
+        required: true
+        schema:
+          type: string
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.Visa'
+      summary: Crea una nueva visa
+      tags:
+      - Visa
+  /visas/{id}:
+    delete:
+      parameters:
+      - description: Bearer token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: ID de la visa a eliminar
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: Visa eliminada exitosamente
+      summary: Elimina una visa por su ID
+      tags:
+      - Visa
+    get:
+      parameters:
+      - description: Bearer token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: ID de la visa
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Visa'
+      summary: Obtiene una visa por su ID
+      tags:
+      - Visa
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: Bearer token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: ID de la visa a actualizar
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Valoración de la visa
+        in: body
+        name: valoracion
+        required: true
+        schema:
+          type: string
+      - description: País de la visa
+        in: body
+        name: pais
+        required: true
+        schema:
+          type: string
+      - description: Tipo de visa
+        in: body
+        name: tipo
+        required: true
+        schema:
+          type: string
+      - description: Código único de la visa
+        in: body
+        name: codigo
+        required: true
+        schema:
+          type: string
+      - description: ID del representante
+        in: body
+        name: representante_id
+        required: true
+        schema:
+          type: string
+      - description: Nivel de la visa
+        in: body
+        name: nivel
+        required: true
+        schema:
+          type: string
+      - description: ID del usuario
+        in: body
+        name: user_id
+        required: true
+        schema:
+          type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Visa'
+      summary: Actualiza una visa existente por su ID
+      tags:
+      - Visa
+securityDefinitions:
+  BearerAuth:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"
