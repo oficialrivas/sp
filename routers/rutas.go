@@ -16,6 +16,7 @@ func SetupRouter(r *gin.Engine) {
 	r.POST("/gestion/area-modalidad", controllers.GetRecordsCountByAreaAndModalidad)
 	r.POST("/gestion/user", controllers.GetRecordsByUserAndPeriod)
     r.POST("/gestion/user-area-modalidad", controllers.GetRecordsCountByUserAndModalidad)
+			
 
 	// Endpoints protegidos con JWT
 	protected := r.Group("/")
@@ -106,6 +107,16 @@ func SetupRouter(r *gin.Engine) {
 		protected.GET("/correos/:id", middleware.RoleRequired("admin", "superuser", "analyst"), middleware.AreaCheck(), controllers.GetCorreoByID)
 		protected.PUT("/correos/:id", middleware.RoleRequired("admin", "superuser"), middleware.AreaCheck(), controllers.UpdateCorreo)
 		protected.DELETE("/correos/:id", middleware.RoleRequired("admin"), middleware.AreaCheck(), controllers.DeleteCorreo)
+
+
+		// CRUD  para mensajes
+		protected.POST("/mensajes/", middleware.RoleRequired("admin", "superuser", "analyst", "user"),  controllers.CreateMensaje)
+		protected.GET("/mensajes/:id", middleware.RoleRequired("admin", "superuser", "analyst"), controllers.GetMensaje)
+		protected.PUT("/mensajes/:id", middleware.RoleRequired("admin"), middleware.AreaCheck(), controllers.UpdateMensaje)
+		protected.DELETE("/mensajes/:id", middleware.RoleRequired("admin"), middleware.AreaCheck(), controllers.DeleteMensaje)
+		protected.GET("/mensajes/", middleware.RoleRequired("admin", "superuser", "analyst"),  controllers.GetMensajes)
+		protected.GET("/mensajes/filter", middleware.RoleRequired("admin", "superuser", "analyst"), controllers.FilterMensajes)
+		protected.PUT("/mensajes/:id/procesado", middleware.RoleRequired("admin", "superuser", "analyst"), controllers.UpdateMensajeStatus)
 
 		// CRUD para Redes
 		protected.POST("/redes", middleware.RoleRequired("admin", "superuser", "user"), controllers.CreateRedes)

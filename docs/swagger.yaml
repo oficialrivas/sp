@@ -359,6 +359,8 @@ definitions:
     type: object
   models.IIO:
     properties:
+      adi:
+        type: string
       area:
         type: string
       created_at:
@@ -381,6 +383,8 @@ definitions:
         type: string
       parroquia:
         type: string
+      procesado:
+        type: boolean
       redi:
         type: string
       relacion:
@@ -395,8 +399,6 @@ definitions:
         type: string
       userID:
         type: string
-      verificada:
-        type: boolean
       zodi:
         type: string
     type: object
@@ -409,6 +411,51 @@ definitions:
     required:
     - correo
     - password
+    type: object
+  models.Mensaje:
+    properties:
+      adi:
+        type: string
+      area:
+        type: string
+      created_at:
+        type: string
+      descripcion:
+        type: string
+      fecha:
+        type: string
+      id:
+        type: string
+      imagen_url:
+        type: string
+      lugar:
+        type: string
+      modalidad:
+        type: string
+      nivel:
+        type: string
+      nombre:
+        type: string
+      parroquia:
+        type: string
+      procesado:
+        type: boolean
+      redi:
+        type: string
+      relacion:
+        items:
+          $ref: '#/definitions/models.Persona'
+        type: array
+      tie:
+        type: string
+      updated_at:
+        type: string
+      urbanizacion:
+        type: string
+      userID:
+        type: string
+      zodi:
+        type: string
     type: object
   models.Nacionalidad:
     properties:
@@ -597,6 +644,8 @@ definitions:
     type: object
   models.User:
     properties:
+      adi:
+        type: string
       apellido:
         type: string
       area:
@@ -618,6 +667,8 @@ definitions:
       nombre:
         type: string
       otp_secret:
+        type: string
+      parroquia:
         type: string
       redi:
         type: string
@@ -2098,6 +2149,291 @@ paths:
       summary: Autentica a un usuario
       tags:
       - users
+  /mensajes:
+    get:
+      consumes:
+      - application/json
+      description: Obtiene todos los registros de Mensaje
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Mensaje'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Obtiene todos los Mensajes
+      tags:
+      - mensaje
+    post:
+      consumes:
+      - multipart/form-data
+      description: Crea un nuevo registro de Mensaje con los datos proporcionados
+      parameters:
+      - description: Bearer token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: Descripción del Mensaje
+        in: formData
+        name: descripcion
+        required: true
+        type: string
+      - description: Fecha del Mensaje (YYYY-MM-DD)
+        in: formData
+        name: fecha
+        required: true
+        type: string
+      - description: Lugar del Mensaje
+        in: formData
+        name: lugar
+        required: true
+        type: string
+      - description: Modalidad del Mensaje
+        in: formData
+        name: modalidad
+        required: true
+        type: string
+      - description: Nombre del Mensaje
+        in: formData
+        name: nombre
+        required: true
+        type: string
+      - description: Parroquia del Mensaje
+        in: formData
+        name: parroquia
+        required: true
+        type: string
+      - description: REDI del Mensaje
+        in: formData
+        name: redi
+        required: true
+        type: string
+      - description: ZODI del Mensaje
+        in: formData
+        name: zodi
+        required: true
+        type: string
+      - description: ADI del Mensaje
+        in: formData
+        name: adi
+        required: true
+        type: string
+      - description: TIE del Mensaje
+        in: formData
+        name: tie
+        required: true
+        type: string
+      - description: Área del Mensaje
+        in: formData
+        name: area
+        required: true
+        type: string
+      - description: Procesado
+        in: formData
+        name: procesado
+        required: true
+        type: boolean
+      - description: Imagen del Mensaje
+        in: formData
+        name: imagen
+        type: file
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Mensaje'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Crea un nuevo registro de Mensaje
+      tags:
+      - mensaje
+  /mensajes/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Elimina un Mensaje por su ID
+      parameters:
+      - description: Bearer token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: ID del Mensaje
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Elimina un Mensaje por su ID
+      tags:
+      - mensaje
+    get:
+      consumes:
+      - application/json
+      description: Obtiene los datos de un Mensaje por su ID
+      parameters:
+      - description: Bearer token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: ID del Mensaje
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Mensaje'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Obtiene un Mensaje por su ID
+      tags:
+      - mensaje
+    put:
+      consumes:
+      - application/json
+      description: Actualiza los datos de un Mensaje existente
+      parameters:
+      - description: Bearer token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: ID del Mensaje
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Datos del Mensaje actualizados
+        in: body
+        name: mensaje
+        required: true
+        schema:
+          $ref: '#/definitions/models.Mensaje'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Mensaje'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Actualiza un Mensaje existente
+      tags:
+      - mensaje
+  /mensajes/filter:
+    get:
+      consumes:
+      - application/json
+      description: Obtiene registros de Mensaje en un periodo específico, y filtrados
+        por tie, redi, zodi y modalidad
+      parameters:
+      - description: Bearer token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: Fecha de inicio (YYYY-MM-DD)
+        in: query
+        name: start_date
+        type: string
+      - description: Fecha de fin (YYYY-MM-DD)
+        in: query
+        name: end_date
+        type: string
+      - description: TIE
+        in: query
+        name: tie
+        type: string
+      - description: REDI
+        in: query
+        name: redi
+        type: string
+      - description: ZODI
+        in: query
+        name: zodi
+        type: string
+      - description: ADI
+        in: query
+        name: adi
+        type: string
+      - description: Modalidad
+        in: query
+        name: modalidad
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Mensaje'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Obtiene Mensajes filtrados
+      tags:
+      - mensaje
   /pasaportes:
     post:
       consumes:

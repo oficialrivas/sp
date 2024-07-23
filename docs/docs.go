@@ -2118,6 +2118,438 @@ const docTemplate = `{
                 }
             }
         },
+        "/mensajes": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Obtiene todos los registros de Mensaje",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "mensaje"
+                ],
+                "summary": "Obtiene todos los Mensajes",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.Mensaje"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/models.ErrorResponse"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Crea un nuevo registro de Mensaje con los datos proporcionados",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "mensaje"
+                ],
+                "summary": "Crea un nuevo registro de Mensaje",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Bearer token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Descripción del Mensaje",
+                        "name": "descripcion",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Fecha del Mensaje (YYYY-MM-DD)",
+                        "name": "fecha",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Lugar del Mensaje",
+                        "name": "lugar",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Modalidad del Mensaje",
+                        "name": "modalidad",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Nombre del Mensaje",
+                        "name": "nombre",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Parroquia del Mensaje",
+                        "name": "parroquia",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "REDI del Mensaje",
+                        "name": "redi",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "ZODI del Mensaje",
+                        "name": "zodi",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "ADI del Mensaje",
+                        "name": "adi",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "TIE del Mensaje",
+                        "name": "tie",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Área del Mensaje",
+                        "name": "area",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "boolean",
+                        "description": "Procesado",
+                        "name": "procesado",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "file",
+                        "description": "Imagen del Mensaje",
+                        "name": "imagen",
+                        "in": "formData"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.Mensaje"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/models.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/models.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/mensajes/filter": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Obtiene registros de Mensaje en un periodo específico, y filtrados por tie, redi, zodi y modalidad",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "mensaje"
+                ],
+                "summary": "Obtiene Mensajes filtrados",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Bearer token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Fecha de inicio (YYYY-MM-DD)",
+                        "name": "start_date",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Fecha de fin (YYYY-MM-DD)",
+                        "name": "end_date",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "TIE",
+                        "name": "tie",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "REDI",
+                        "name": "redi",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "ZODI",
+                        "name": "zodi",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "ADI",
+                        "name": "adi",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Modalidad",
+                        "name": "modalidad",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.Mensaje"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/models.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/models.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/mensajes/{id}": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Obtiene los datos de un Mensaje por su ID",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "mensaje"
+                ],
+                "summary": "Obtiene un Mensaje por su ID",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Bearer token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "ID del Mensaje",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.Mensaje"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/models.ErrorResponse"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Actualiza los datos de un Mensaje existente",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "mensaje"
+                ],
+                "summary": "Actualiza un Mensaje existente",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Bearer token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "ID del Mensaje",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Datos del Mensaje actualizados",
+                        "name": "mensaje",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.Mensaje"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.Mensaje"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/models.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/models.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/models.ErrorResponse"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Elimina un Mensaje por su ID",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "mensaje"
+                ],
+                "summary": "Elimina un Mensaje por su ID",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Bearer token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "ID del Mensaje",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "No Content"
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/models.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/pasaportes": {
             "post": {
                 "consumes": [
@@ -4507,6 +4939,9 @@ const docTemplate = `{
         "models.IIO": {
             "type": "object",
             "properties": {
+                "adi": {
+                    "type": "string"
+                },
                 "area": {
                     "type": "string"
                 },
@@ -4540,6 +4975,9 @@ const docTemplate = `{
                 "parroquia": {
                     "type": "string"
                 },
+                "procesado": {
+                    "type": "boolean"
+                },
                 "redi": {
                     "type": "string"
                 },
@@ -4561,9 +4999,6 @@ const docTemplate = `{
                 "userID": {
                     "type": "string"
                 },
-                "verificada": {
-                    "type": "boolean"
-                },
                 "zodi": {
                     "type": "string"
                 }
@@ -4580,6 +5015,74 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "password": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.Mensaje": {
+            "type": "object",
+            "properties": {
+                "adi": {
+                    "type": "string"
+                },
+                "area": {
+                    "type": "string"
+                },
+                "created_at": {
+                    "type": "string"
+                },
+                "descripcion": {
+                    "type": "string"
+                },
+                "fecha": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "imagen_url": {
+                    "type": "string"
+                },
+                "lugar": {
+                    "type": "string"
+                },
+                "modalidad": {
+                    "type": "string"
+                },
+                "nivel": {
+                    "type": "string"
+                },
+                "nombre": {
+                    "type": "string"
+                },
+                "parroquia": {
+                    "type": "string"
+                },
+                "procesado": {
+                    "type": "boolean"
+                },
+                "redi": {
+                    "type": "string"
+                },
+                "relacion": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.Persona"
+                    }
+                },
+                "tie": {
+                    "type": "string"
+                },
+                "updated_at": {
+                    "type": "string"
+                },
+                "urbanizacion": {
+                    "type": "string"
+                },
+                "userID": {
+                    "type": "string"
+                },
+                "zodi": {
                     "type": "string"
                 }
             }
@@ -4868,6 +5371,9 @@ const docTemplate = `{
         "models.User": {
             "type": "object",
             "properties": {
+                "adi": {
+                    "type": "string"
+                },
                 "apellido": {
                     "type": "string"
                 },
@@ -4899,6 +5405,9 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "otp_secret": {
+                    "type": "string"
+                },
+                "parroquia": {
                     "type": "string"
                 },
                 "redi": {

@@ -42,7 +42,7 @@ func ConnectToDB() {
 	err = db.AutoMigrate(
 		&models.User{}, &models.IIO{}, &models.Persona{}, &models.Vehiculo{},
 		&models.Empresa{}, &models.Direccion{}, &models.Pasaporte{}, &models.Visa{},
-		&models.Documento{}, &models.Caso{}, &models.Correo{}, &models.Redes{}, &models.TemporaryAccess{}, &models.Nacionalidad{},
+		&models.Documento{}, &models.Caso{}, &models.Correo{}, &models.Redes{}, &models.TemporaryAccess{}, &models.Nacionalidad{}, &models.Mensaje{},
 	)
 	if err != nil {
 		log.Fatalf("Failed to migrate database: %v", err)

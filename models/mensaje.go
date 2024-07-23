@@ -7,7 +7,7 @@ import (
 	"gorm.io/gorm"
 )
 
-type IIO struct {
+type Mensaje struct {
 	ID           uuid.UUID `gorm:"type:uuid;default:uuid_generate_v4()" json:"id"`
 	CreatedAt    time.Time `json:"created_at"`
 	UpdatedAt    time.Time `json:"updated_at"`
@@ -30,17 +30,17 @@ type IIO struct {
 	UserID       uuid.UUID `gorm:"type:uuid;column:user_id"`
 }
 
-func (IIO) TableName() string {
-	return "iio"
+func (Mensaje) TableName() string {
+	return "mensaje"
 }
 
-func (iio *IIO) BeforeCreate(tx *gorm.DB) (err error) {
-	iio.ID = uuid.New()
+func (mensaje *Mensaje) BeforeCreate(tx *gorm.DB) (err error) {
+	mensaje.ID = uuid.New()
 	now := time.Now().UTC().Format(time.RFC3339)
-	iio.CreatedAt, err = time.Parse(time.RFC3339, now)
+	mensaje.CreatedAt, err = time.Parse(time.RFC3339, now)
 	if err != nil {
 		return err
 	}
-	iio.UpdatedAt = iio.CreatedAt
+	mensaje.UpdatedAt = mensaje.CreatedAt
 	return nil
 }
