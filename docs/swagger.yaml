@@ -357,6 +357,13 @@ definitions:
       error:
         type: string
     type: object
+  models.GenerateTokenRequest:
+    properties:
+      telefono:
+        type: string
+      usuario:
+        type: string
+    type: object
   models.IIO:
     properties:
       adi:
@@ -675,6 +682,8 @@ definitions:
       telefono:
         type: string
       tie:
+        type: string
+      u_telegran:
         type: string
       updated_at:
         type: string
@@ -1658,6 +1667,41 @@ paths:
       summary: Obtiene una empresa por su RIF
       tags:
       - Empresa
+  /generate-token:
+    post:
+      consumes:
+      - application/json
+      description: Genera un JWT válido a partir del número de teléfono o usuario
+        de Telegram
+      parameters:
+      - description: Número de teléfono o usuario de Telegram
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/models.GenerateTokenRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.TokenResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      summary: Genera un JWT válido
+      tags:
+      - users
   /gestion:
     post:
       consumes:
@@ -2370,6 +2414,46 @@ paths:
       security:
       - ApiKeyAuth: []
       summary: Actualiza un Mensaje existente
+      tags:
+      - mensaje
+  /mensajes/{id}/procesado:
+    put:
+      consumes:
+      - application/json
+      description: Actualiza el campo Procesado de un Mensaje a true
+      parameters:
+      - description: Bearer token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: ID del Mensaje
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Mensaje'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Actualiza el campo Procesado de un Mensaje a true
       tags:
       - mensaje
   /mensajes/filter:

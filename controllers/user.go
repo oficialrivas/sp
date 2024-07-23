@@ -97,6 +97,52 @@ func Login(c *gin.Context) {
 	c.JSON(http.StatusOK, models.TokenResponse{AccessToken: accessToken, RefreshToken: refreshToken, ID: user.ID.String()})
 }
 
+
+// GenerateToken genera un JWT válido a partir del número de teléfono o usuario de Telegram
+// @Summary Genera un JWT válido
+// @Description Genera un JWT válido a partir del número de teléfono o usuario de Telegram
+// @Tags users
+// @Accept json
+// @Produce json
+// @Param data body models.GenerateTokenRequest true "Número de teléfono o usuario de Telegram"
+// @Success 200 {object} models.TokenResponse
+// @Failure 400 {object} models.ErrorResponse
+// @Failure 404 {object} models.ErrorResponse
+// @Failure 500 {object} models.ErrorResponse
+// @Router /generate-token [post]
+func GenerateToken(c *gin.Context) {
+	var request models.GenerateTokenRequest
+	if err := c.ShouldBindJSON(&request); err != nil {
+		c.JSON(http.StatusBadRequest, models.ErrorResponse{Error: err.Error()})
+		return
+	}
+
+	var user models.User
+	if request.Telefono != "" {
+		if err := configs.DB.Where("telefono = ?", request.Telefono).First(&user).Error; err != nil {
+			c.JSON(http.StatusNotFound, models.ErrorResponse{Error: "Usuario no encontrado"})
+			return
+		}
+	} else if request.Usuario != "" {
+		if err := configs.DB.Where("usuario = ?", request.Usuario).First(&user).Error; err != nil {
+			c.JSON(http.StatusNotFound, models.ErrorResponse{Error: "Usuario no encontrado"})
+			return
+		}
+	} else {
+		c.JSON(http.StatusBadRequest, models.ErrorResponse{Error: "Se requiere número de teléfono o usuario de Telegram"})
+		return
+	}
+
+	accessToken, refreshToken, err := utils.GenerateTokens(user.ID.String(), user.Nivel, user.Area)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, models.ErrorResponse{Error: "No se pudo generar los tokens"})
+		return
+	}
+
+	c.JSON(http.StatusOK, models.TokenResponse{AccessToken: accessToken, RefreshToken: refreshToken, ID: user.ID.String()})
+}
+
+
 // RefreshToken renueva el accessToken usando el refreshToken
 // @Summary Renueva el accessToken
 // @Description Renueva el accessToken usando el refreshToken proporcionado

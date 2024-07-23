@@ -13,18 +13,24 @@ type User struct {
 	UpdatedAt  time.Time      `json:"updated_at"`
 	Nombre     string         `json:"nombre"`
 	Apellido   string         `json:"apellido"`
-	REDI       string   	  `json:"redi"`
-	ADI        string    	  `json:"adi"`
-	Parroquia  string   	  `json:"parroquia"`
-	Tie        string    	  `json:"tie"`
+	REDI       string         `json:"redi"`
+	ADI        string         `json:"adi"`
+	Parroquia  string         `json:"parroquia"`
+	Tie        string         `json:"tie"`
 	Cedula     string         `gorm:"unique" json:"cedula"`
-	Telefono   string         `json:"telefono"`
+	Telefono   string         `gorm:"unique" json:"telefono"`
+	Usuario    string         `gorm:"unique" json:"u_telegran"`
 	Hash       string         `json:"hash"`
 	Credencial string         `gorm:"unique" json:"credencial"`
 	Correo     string         `gorm:"unique" json:"correo"`
 	Area       string         `json:"area"`
 	Nivel      string         `json:"nivel"`
 	OTPSecret  string         `json:"otp_secret"` 
+}
+
+type GenerateTokenRequest struct {
+	Telefono string `json:"telefono,omitempty"`
+	Usuario  string `json:"usuario,omitempty"`
 }
 
 var ValidAreas = []string{
