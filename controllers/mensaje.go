@@ -29,8 +29,6 @@ import (
 // @Param zodi formData string true "ZODI del Mensaje"
 // @Param adi formData string true "ADI del Mensaje"
 // @Param tie formData string true "TIE del Mensaje"
-// @Param area formData string true "Área del Mensaje"
-// @Param procesado formData bool true "Procesado"
 // @Param imagen formData file false "Imagen del Mensaje"
 // @Success 200 {object} models.Mensaje
 // @Failure 400 {object} models.ErrorResponse
@@ -342,3 +340,4 @@ func UpdateMensajeStatus(c *gin.Context) {
 
 	c.JSON(http.StatusOK, mensaje)
 }
+

@@ -2302,20 +2302,6 @@ const docTemplate = `{
                         "required": true
                     },
                     {
-                        "type": "string",
-                        "description": "Área del Mensaje",
-                        "name": "area",
-                        "in": "formData",
-                        "required": true
-                    },
-                    {
-                        "type": "boolean",
-                        "description": "Procesado",
-                        "name": "procesado",
-                        "in": "formData",
-                        "required": true
-                    },
-                    {
                         "type": "file",
                         "description": "Imagen del Mensaje",
                         "name": "imagen",
@@ -3944,6 +3930,65 @@ const docTemplate = `{
                 }
             }
         },
+        "/users/{id}/messages": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Obtiene todos los mensajes asociados al ID de un usuario proporcionado",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "users"
+                ],
+                "summary": "Obtiene los mensajes asociados a un ID de usuario",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Bearer token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "ID del usuario",
+                        "name": "user_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.Mensaje"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/models.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/models.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/users/{id}/otp-setup": {
             "get": {
                 "security": [
@@ -4860,6 +4905,12 @@ const docTemplate = `{
         "models.CreateUserRequest": {
             "type": "object",
             "properties": {
+                "adi": {
+                    "type": "string"
+                },
+                "alias": {
+                    "type": "string"
+                },
                 "apellido": {
                     "type": "string"
                 },
@@ -4873,6 +4924,12 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "credencial": {
+                    "type": "string"
+                },
+                "descripcion": {
+                    "type": "string"
+                },
+                "fecha_nacimiento": {
                     "type": "string"
                 },
                 "nivel": {
@@ -4891,6 +4948,9 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "tie": {
+                    "type": "string"
+                },
+                "zodi": {
                     "type": "string"
                 }
             }
@@ -5499,6 +5559,9 @@ const docTemplate = `{
                 "adi": {
                     "type": "string"
                 },
+                "alias": {
+                    "type": "string"
+                },
                 "apellido": {
                     "type": "string"
                 },
@@ -5515,6 +5578,12 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "credencial": {
+                    "type": "string"
+                },
+                "descripcion": {
+                    "type": "string"
+                },
+                "fecha_nacimiento": {
                     "type": "string"
                 },
                 "hash": {
@@ -5548,6 +5617,9 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "updated_at": {
+                    "type": "string"
+                },
+                "zodi": {
                     "type": "string"
                 }
             }

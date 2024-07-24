@@ -232,6 +232,10 @@ definitions:
     type: object
   models.CreateUserRequest:
     properties:
+      adi:
+        type: string
+      alias:
+        type: string
       apellido:
         type: string
       area:
@@ -241,6 +245,10 @@ definitions:
       correo:
         type: string
       credencial:
+        type: string
+      descripcion:
+        type: string
+      fecha_nacimiento:
         type: string
       nivel:
         type: string
@@ -253,6 +261,8 @@ definitions:
       telefono:
         type: string
       tie:
+        type: string
+      zodi:
         type: string
     type: object
   models.Direccion:
@@ -653,6 +663,8 @@ definitions:
     properties:
       adi:
         type: string
+      alias:
+        type: string
       apellido:
         type: string
       area:
@@ -664,6 +676,10 @@ definitions:
       created_at:
         type: string
       credencial:
+        type: string
+      descripcion:
+        type: string
+      fecha_nacimiento:
         type: string
       hash:
         type: string
@@ -686,6 +702,8 @@ definitions:
       u_telegran:
         type: string
       updated_at:
+        type: string
+      zodi:
         type: string
     type: object
   models.Vehiculo:
@@ -2276,16 +2294,6 @@ paths:
         name: tie
         required: true
         type: string
-      - description: Área del Mensaje
-        in: formData
-        name: area
-        required: true
-        type: string
-      - description: Procesado
-        in: formData
-        name: procesado
-        required: true
-        type: boolean
       - description: Imagen del Mensaje
         in: formData
         name: imagen
@@ -3354,6 +3362,44 @@ paths:
       security:
       - BearerAuth: []
       summary: Actualiza un usuario por su ID
+      tags:
+      - users
+  /users/{id}/messages:
+    get:
+      consumes:
+      - application/json
+      description: Obtiene todos los mensajes asociados al ID de un usuario proporcionado
+      parameters:
+      - description: Bearer token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: ID del usuario
+        in: path
+        name: user_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Mensaje'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Obtiene los mensajes asociados a un ID de usuario
       tags:
       - users
   /users/{id}/otp-setup:

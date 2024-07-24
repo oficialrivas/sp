@@ -45,9 +45,14 @@ func CreateUser(c *gin.Context) {
 		Credencial: request.Credencial,
 		Correo:     request.Correo,
 		Area:       request.Area,
+		Alias:       request.Alias,
+		Fecha:       request.Fecha,
+		Descripcion:       request.Descripcion,
 		Nivel:      request.Nivel,
 		Tie:      request.Tie,
 		REDI:      request.REDI,
+		Zodi:      request.Zodi,
+		ADI:      request.ADI,
 	}
 
 	if err := configs.DB.Create(&user).Error; err != nil {
@@ -367,4 +372,28 @@ func UpdatePassword(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, SuccessResponse{Message: "Password updated successfully"})
+}
+
+// GetMensajesByUserID obtiene los mensajes asociados a un ID de usuario
+// @Summary Obtiene los mensajes asociados a un ID de usuario
+// @Description Obtiene todos los mensajes asociados al ID de un usuario proporcionado
+// @Tags users
+// @Accept json
+// @Produce json
+// @Param Authorization header string true "Bearer token"
+// @Param user_id path string true "ID del usuario"
+// @Success 200 {array} models.Mensaje
+// @Failure 400 {object} models.ErrorResponse
+// @Failure 404 {object} models.ErrorResponse
+// @Router /users/{id}/messages [get]
+// @Security ApiKeyAuth
+func GetMensajesByUserID(c *gin.Context) {
+	userID := c.Param("user_id")
+	var mensajes []models.Mensaje
+	if err := configs.DB.Where("user_id = ?", userID).Find(&mensajes).Error; err != nil {
+		c.JSON(http.StatusNotFound, models.ErrorResponse{Error: "Mensajes no encontrados"})
+		return
+	}
+
+	c.JSON(http.StatusOK, mensajes)
 }

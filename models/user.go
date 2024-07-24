@@ -15,8 +15,12 @@ type User struct {
 	Apellido   string         `json:"apellido"`
 	REDI       string         `json:"redi"`
 	ADI        string         `json:"adi"`
+	Zodi        string         `json:"zodi"`
+	Fecha      time.Time      `json:"fecha_nacimiento"`
 	Parroquia  string         `json:"parroquia"`
 	Tie        string         `json:"tie"`
+	Alias        string         `json:"alias"`
+	Descripcion        string `json:"descripcion"`
 	Cedula     string         `gorm:"unique" json:"cedula"`
 	Telefono   string         `gorm:"unique" json:"telefono"`
 	Usuario    string         `gorm:"unique" json:"u_telegran"`

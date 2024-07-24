@@ -1,5 +1,11 @@
 package models
 
+import (
+	"time"
+
+	
+)
+
 type CreateUserRequest struct {
 	Nombre     string `json:"nombre"`
 	Apellido   string `json:"apellido"`
@@ -7,11 +13,17 @@ type CreateUserRequest struct {
 	Telefono   string `json:"telefono"`
 	Password   string `json:"password"`
 	Credencial string `json:"credencial"`
+	Alias        string         `json:"alias"`
 	Correo     string `json:"correo"`
+	REDI       string         `json:"redi"`
+	ADI        string         `json:"adi"`
+	Zodi        string         `json:"zodi"`
 	Area       string `json:"area"`
+	Fecha      time.Time      `json:"fecha_nacimiento"`
 	Nivel      string `json:"nivel"`
+	Descripcion        string `json:"descripcion"`
 	Tie        string    	  `json:"tie"`
-	REDI       string   	  `json:"redi"`
+
 }
 
 type LoginRequest struct {

@@ -18,7 +18,6 @@ func SetupRouter(r *gin.Engine) {
     r.POST("/gestion/user-area-modalidad", controllers.GetRecordsCountByUserAndModalidad)
 	r.POST("/generate-token", controllers.GenerateToken) 
 			
-
 	// Endpoints protegidos con JWT
 	protected := r.Group("/")
 	protected.Use(middleware.AuthRequired()) // Middleware de autenticación JWT
@@ -30,6 +29,7 @@ func SetupRouter(r *gin.Engine) {
 		protected.DELETE("/users/:id", middleware.RoleRequired("admin"), controllers.DeleteUser)
 		protected.GET("/users/:id/otp-setup", middleware.RoleRequired("admin"), controllers.SetupOTP)
 		protected.PUT("/users/:id/password", middleware.RoleRequired("admin"), controllers.UpdatePassword)
+		protected.GET("/users/:id/messages", middleware.RoleRequired("admin", "superuser", "analyst"), controllers.GetMensajesByUserID)
 		
 
 		// CRUD para Caso
@@ -110,15 +110,15 @@ func SetupRouter(r *gin.Engine) {
 		protected.PUT("/correos/:id", middleware.RoleRequired("admin", "superuser"), middleware.AreaCheck(), controllers.UpdateCorreo)
 		protected.DELETE("/correos/:id", middleware.RoleRequired("admin"), middleware.AreaCheck(), controllers.DeleteCorreo)
 
-
-		// CRUD  para mensajes
+		// CRUD para Mensajes
 		protected.GET("/mensajes/:id", middleware.RoleRequired("admin", "superuser", "analyst"), controllers.GetMensaje)
 		protected.PUT("/mensajes/:id", middleware.RoleRequired("admin"), middleware.AreaCheck(), controllers.UpdateMensaje)
 		protected.DELETE("/mensajes/:id", middleware.RoleRequired("admin"), middleware.AreaCheck(), controllers.DeleteMensaje)
-		protected.GET("/mensajes/", middleware.RoleRequired("admin", "superuser", "analyst"),  controllers.GetMensajes)
+		protected.GET("/mensajes", middleware.RoleRequired("admin", "superuser", "analyst"), controllers.GetMensajes)
 		protected.GET("/mensajes/filter", middleware.RoleRequired("admin", "superuser", "analyst"), controllers.FilterMensajes)
 		protected.PUT("/mensajes/:id/procesado", middleware.RoleRequired("admin", "superuser", "analyst"), controllers.UpdateMensajeStatus)
-		protected.POST("/mensajes/",  middleware.RoleRequired("admin", "superuser", "analyst", "user"), controllers.CreateMensaje)
+		protected.POST("/mensajes", middleware.RoleRequired("admin", "superuser", "analyst", "user"), controllers.CreateMensaje)
+		
 
 		// CRUD para Redes
 		protected.POST("/redes", middleware.RoleRequired("admin", "superuser", "user"), controllers.CreateRedes)
