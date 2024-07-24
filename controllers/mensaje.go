@@ -62,12 +62,6 @@ func CreateMensaje(c *gin.Context) {
 		return
 	}
 
-	userID, exists := c.Get("userID")
-	if !exists {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "User ID not found in token"})
-		return
-	}
-
 	// Obtener el token desde el encabezado
 	tokenString := c.GetHeader("Authorization")
 	if tokenString == "" {
@@ -79,6 +73,13 @@ func CreateMensaje(c *gin.Context) {
 	claims, err := utils.ValidateJWT(tokenString, false)
 	if err != nil {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid token", "details": err.Error()})
+		return
+	}
+
+	// Asignar el área del usuario desde el token
+	userID := claims.UserID
+	if userID == "" {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "User ID not found in token"})
 		return
 	}
 
@@ -107,10 +108,9 @@ func CreateMensaje(c *gin.Context) {
 		ADI:          input.ADI,
 		Tie:          input.Tie,
 		Area:         claims.Area, // Asignar el área del usuario desde el token
-		UserID:       uuid.MustParse(userID.(string)),
+		UserID:       uuid.MustParse(userID),
 		ImagenURL:    imagenURL,
 		Procesado:    input.Procesado,
-	
 	}
 
 	if err := configs.DB.Create(&mensaje).Error; err != nil {
@@ -120,6 +120,7 @@ func CreateMensaje(c *gin.Context) {
 
 	c.JSON(http.StatusOK, mensaje)
 }
+
 
 // GetMensaje obtiene un Mensaje por su ID
 // @Summary Obtiene un Mensaje por su ID

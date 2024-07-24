@@ -815,6 +815,64 @@ const docTemplate = `{
                 }
             }
         },
+        "/create-and-send-mensaje": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Crea un nuevo registro de Mensaje con los datos proporcionados y lo envía a un webhook",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "mensaje"
+                ],
+                "summary": "Crea un nuevo registro de Mensaje y lo envía a un webhook",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Bearer token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "description": "Mensaje",
+                        "name": "mensaje",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/controllers.createAndSendMensajeInput"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.Mensaje"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/models.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/models.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/direcciones": {
             "post": {
                 "consumes": [
@@ -4784,6 +4842,33 @@ const docTemplate = `{
                 }
             }
         },
+        "controllers.createAndSendMensajeInput": {
+            "type": "object",
+            "required": [
+                "adi",
+                "descripcion",
+                "redi",
+                "tie",
+                "zodi"
+            ],
+            "properties": {
+                "adi": {
+                    "type": "string"
+                },
+                "descripcion": {
+                    "type": "string"
+                },
+                "redi": {
+                    "type": "string"
+                },
+                "tie": {
+                    "type": "string"
+                },
+                "zodi": {
+                    "type": "string"
+                }
+            }
+        },
         "models.Caso": {
             "type": "object",
             "properties": {
@@ -4948,6 +5033,9 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "tie": {
+                    "type": "string"
+                },
+                "u_telegran": {
                     "type": "string"
                 },
                 "zodi": {
@@ -5256,6 +5344,9 @@ const docTemplate = `{
                     }
                 },
                 "tie": {
+                    "type": "string"
+                },
+                "tipo": {
                     "type": "string"
                 },
                 "updated_at": {

@@ -41,6 +41,7 @@ func CreateUser(c *gin.Context) {
 		Apellido:   request.Apellido,
 		Cedula:     request.Cedula,
 		Telefono:   request.Telefono,
+		Usuario:   request.Usuario,
 		Hash:       string(hashedPassword),
 		Credencial: request.Credencial,
 		Correo:     request.Correo,

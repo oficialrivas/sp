@@ -23,7 +23,7 @@ type User struct {
 	Descripcion        string `json:"descripcion"`
 	Cedula     string         `gorm:"unique" json:"cedula"`
 	Telefono   string         `gorm:"unique" json:"telefono"`
-	Usuario    string         `gorm:"unique" json:"u_telegran"`
+	Usuario    string         `json:"u_telegran"`
 	Hash       string         `json:"hash"`
 	Credencial string         `gorm:"unique" json:"credencial"`
 	Correo     string         `gorm:"unique" json:"correo"`

@@ -13,6 +13,7 @@ func SetupRouter(r *gin.Engine) {
 	r.POST("/webhook", controllers.WebhookHandler)
 	r.POST("/gestion", controllers.GetRecordsByAreaAndPeriod)
 	r.POST("/gestion/por-area", controllers.GetRecordsCountByAreaAndPeriod)
+	r.POST("/websms", controllers.WebsmsHandler)  
 	r.POST("/gestion/area-modalidad", controllers.GetRecordsCountByAreaAndModalidad)
 	r.POST("/gestion/user", controllers.GetRecordsByUserAndPeriod)
     r.POST("/gestion/user-area-modalidad", controllers.GetRecordsCountByUserAndModalidad)
@@ -118,7 +119,7 @@ func SetupRouter(r *gin.Engine) {
 		protected.GET("/mensajes/filter", middleware.RoleRequired("admin", "superuser", "analyst"), controllers.FilterMensajes)
 		protected.PUT("/mensajes/:id/procesado", middleware.RoleRequired("admin", "superuser", "analyst"), controllers.UpdateMensajeStatus)
 		protected.POST("/mensajes", middleware.RoleRequired("admin", "superuser", "analyst", "user"), controllers.CreateMensaje)
-		
+		protected.POST("/create-and-send-mensaje", middleware.RoleRequired("admin", "superuser", "analyst", "user"), controllers.CreateAndSendMensaje)
 
 		// CRUD para Redes
 		protected.POST("/redes", middleware.RoleRequired("admin", "superuser", "user"), controllers.CreateRedes)

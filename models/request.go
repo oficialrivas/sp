@@ -13,6 +13,7 @@ type CreateUserRequest struct {
 	Telefono   string `json:"telefono"`
 	Password   string `json:"password"`
 	Credencial string `json:"credencial"`
+	Usuario    string         `json:"u_telegran"`
 	Alias        string         `json:"alias"`
 	Correo     string `json:"correo"`
 	REDI       string         `json:"redi"`

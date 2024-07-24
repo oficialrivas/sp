@@ -15,6 +15,7 @@ type Mensaje struct {
 	ZODI         string    `json:"zodi"`
 	ADI         string    `json:"adi"`
 	Modalidad    string    `json:"modalidad"`
+	Tipo          string    `json:"tipo"`
 	Tie          string    `json:"tie"`
 	Fecha        time.Time `json:"fecha"`
 	Lugar        string    `json:"lugar"`
