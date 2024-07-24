@@ -64,8 +64,7 @@ func CreateAndSendMensaje(c *gin.Context) {
 		Tie:         input.Tie,
 		UserID:      uuid.MustParse(userID),
 		Tipo:        "saliente", // Establecer el tipo como "saliente"
-	
-		
+		Procesado:   input.Procesado,
 	}
 
 	if err := configs.DB.Create(&mensaje).Error; err != nil {
@@ -88,6 +87,79 @@ func CreateAndSendMensaje(c *gin.Context) {
 	c.JSON(http.StatusOK, mensaje)
 }
 
+// SendMensajeToUser envía un mensaje a un usuario específico basado en su ID
+// @Summary Envía un mensaje a un usuario específico basado en su ID
+// @Description Envía un mensaje a un usuario específico basado en su ID
+// @Tags mensaje
+// @Accept json
+// @Produce json
+// @Param Authorization header string true "Bearer token"
+// @Param user_id path string true "ID del usuario"
+// @Param mensaje body sendMensajeToUserInput true "Mensaje"
+// @Success 200 {object} models.Mensaje
+// @Failure 400 {object} models.ErrorResponse
+// @Failure 500 {object} models.ErrorResponse
+// @Router /send-mensaje-to-user/{user_id} [post]
+// @Security BearerAuth
+func SendMensajeToUser(c *gin.Context) {
+	var input sendMensajeToUserInput
+	if err := c.ShouldBindJSON(&input); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	// Obtener el ID del usuario desde los parámetros de la URL
+	userIDParam := c.Param("user_id")
+	userID, err := uuid.Parse(userIDParam)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid user ID"})
+		return
+	}
+
+	// Obtener el token desde el encabezado
+	tokenString := c.GetHeader("Authorization")
+	if tokenString == "" {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "Authorization header not found"})
+		return
+	}
+
+	// Validar el token
+	if _, err := utils.ValidateJWT(tokenString, false); err != nil {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid token", "details": err.Error()})
+		return
+	}
+
+	// Obtener los detalles del usuario
+	var user models.User
+	if err := configs.DB.First(&user, "id = ?", userID).Error; err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": "User not found"})
+		return
+	}
+
+	// Crear el registro del mensaje
+	mensaje := models.Mensaje{
+		Descripcion: input.Descripcion,
+		Fecha:       time.Now(), // Establecer la fecha automáticamente
+		REDI:        user.REDI,
+		ZODI:        user.Zodi,
+		ADI:         user.ADI,
+		Tie:         input.Tie,
+		UserID:      userID,
+		Tipo:        "saliente", // Establecer el tipo como "saliente"
+		Procesado:   false, // Assuming this should be set to false when sending the message
+	}
+
+	if err := configs.DB.Create(&mensaje).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	// Enviar el mensaje al usuario específico
+	sendToWebhook(user.Telefono, input.Descripcion, user.REDI)
+
+	c.JSON(http.StatusOK, mensaje)
+}
+
 // createAndSendMensajeInput es la estructura para el cuerpo de la solicitud de CreateAndSendMensaje
 type createAndSendMensajeInput struct {
 	Descripcion string `json:"descripcion" binding:"required"`
@@ -95,7 +167,13 @@ type createAndSendMensajeInput struct {
 	ZODI        string `json:"zodi" binding:"required"`
 	ADI         string `json:"adi" binding:"required"`
 	Tie         string `json:"tie" binding:"required"`
+	Procesado   bool   `json:"procesado" binding:"required"`
+}
 
+// sendMensajeToUserInput es la estructura para el cuerpo de la solicitud de SendMensajeToUser
+type sendMensajeToUserInput struct {
+	Descripcion string `json:"descripcion" binding:"required"`
+	Tie         string `json:"tie" binding:"required"`
 }
 
 // sendToWebhook envía una solicitud POST al webhook con el mensaje y los detalles del usuario

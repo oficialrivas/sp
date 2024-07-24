@@ -3716,6 +3716,71 @@
                 }
             }
         },
+        "/send-mensaje-to-user/{user_id}": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Envía un mensaje a un usuario específico basado en su ID",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "mensaje"
+                ],
+                "summary": "Envía un mensaje a un usuario específico basado en su ID",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Bearer token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "ID del usuario",
+                        "name": "user_id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Mensaje",
+                        "name": "mensaje",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/controllers.sendMensajeToUserInput"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.Mensaje"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/models.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/models.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/signup": {
             "post": {
                 "description": "Crea un nuevo usuario con los datos proporcionados",
@@ -4841,6 +4906,7 @@
             "required": [
                 "adi",
                 "descripcion",
+                "procesado",
                 "redi",
                 "tie",
                 "zodi"
@@ -4852,6 +4918,9 @@
                 "descripcion": {
                     "type": "string"
                 },
+                "procesado": {
+                    "type": "boolean"
+                },
                 "redi": {
                     "type": "string"
                 },
@@ -4859,6 +4928,21 @@
                     "type": "string"
                 },
                 "zodi": {
+                    "type": "string"
+                }
+            }
+        },
+        "controllers.sendMensajeToUserInput": {
+            "type": "object",
+            "required": [
+                "descripcion",
+                "tie"
+            ],
+            "properties": {
+                "descripcion": {
+                    "type": "string"
+                },
+                "tie": {
                     "type": "string"
                 }
             }

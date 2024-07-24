@@ -120,6 +120,7 @@ func SetupRouter(r *gin.Engine) {
 		protected.PUT("/mensajes/:id/procesado", middleware.RoleRequired("admin", "superuser", "analyst"), controllers.UpdateMensajeStatus)
 		protected.POST("/mensajes", middleware.RoleRequired("admin", "superuser", "analyst", "user"), controllers.CreateMensaje)
 		protected.POST("/create-and-send-mensaje", middleware.RoleRequired("admin", "superuser", "analyst", "user"), controllers.CreateAndSendMensaje)
+		protected.POST("/send-mensaje-to-user/:user_id", middleware.RoleRequired("admin", "superuser", "analyst", "user"), controllers.SendMensajeToUser)
 
 		// CRUD para Redes
 		protected.POST("/redes", middleware.RoleRequired("admin", "superuser", "user"), controllers.CreateRedes)

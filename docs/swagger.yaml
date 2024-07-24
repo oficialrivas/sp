@@ -158,6 +158,8 @@ definitions:
         type: string
       descripcion:
         type: string
+      procesado:
+        type: boolean
       redi:
         type: string
       tie:
@@ -167,9 +169,20 @@ definitions:
     required:
     - adi
     - descripcion
+    - procesado
     - redi
     - tie
     - zodi
+    type: object
+  controllers.sendMensajeToUserInput:
+    properties:
+      descripcion:
+        type: string
+      tie:
+        type: string
+    required:
+    - descripcion
+    - tie
     type: object
   models.Caso:
     properties:
@@ -3253,6 +3266,48 @@ paths:
       summary: Renueva el accessToken
       tags:
       - users
+  /send-mensaje-to-user/{user_id}:
+    post:
+      consumes:
+      - application/json
+      description: Envía un mensaje a un usuario específico basado en su ID
+      parameters:
+      - description: Bearer token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: ID del usuario
+        in: path
+        name: user_id
+        required: true
+        type: string
+      - description: Mensaje
+        in: body
+        name: mensaje
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.sendMensajeToUserInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Mensaje'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Envía un mensaje a un usuario específico basado en su ID
+      tags:
+      - mensaje
   /signup:
     post:
       consumes:
