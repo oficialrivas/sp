@@ -19,7 +19,7 @@ import (
 // @Accept json
 // @Produce json
 // @Param user body models.CreateUserRequest true "Datos del usuario"
-// @Success 200 {object} models.User
+// @Success 200 {object} gin.H{"message": "Usuario creado con éxito"}
 // @Failure 400 {object} models.ErrorResponse
 // @Failure 500 {object} models.ErrorResponse
 // @Router /signup [post]
@@ -37,23 +37,23 @@ func CreateUser(c *gin.Context) {
 	}
 
 	user := models.User{
-		Nombre:     request.Nombre,
-		Apellido:   request.Apellido,
-		Cedula:     request.Cedula,
-		Telefono:   request.Telefono,
-		Usuario:   request.Usuario,
-		Hash:       string(hashedPassword),
-		Credencial: request.Credencial,
-		Correo:     request.Correo,
-		Area:       request.Area,
+		Nombre:      request.Nombre,
+		Apellido:    request.Apellido,
+		Cedula:      request.Cedula,
+		Telefono:    request.Telefono,
+		Usuario:     request.Usuario,
+		Hash:        string(hashedPassword),
+		Credencial:  request.Credencial,
+		Correo:      request.Correo,
+		Area:        request.Area,
 		Alias:       request.Alias,
 		Fecha:       request.Fecha,
-		Descripcion:       request.Descripcion,
-		Nivel:      request.Nivel,
-		Tie:      request.Tie,
-		REDI:      request.REDI,
-		Zodi:      request.Zodi,
-		ADI:      request.ADI,
+		Descripcion: request.Descripcion,
+		Nivel:       request.Nivel,
+		Tie:         request.Tie,
+		REDI:        request.REDI,
+		Zodi:        request.Zodi,
+		ADI:         request.ADI,
 	}
 
 	if err := configs.DB.Create(&user).Error; err != nil {
@@ -61,7 +61,7 @@ func CreateUser(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, user)
+	c.JSON(http.StatusOK, gin.H{"message": "Usuario creado con éxito"})
 }
 
 // Login autentica a un usuario y genera un JWT
