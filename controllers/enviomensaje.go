@@ -99,7 +99,7 @@ func CreateAndSendMensaje(c *gin.Context) {
 // @Success 200 {object} models.Mensaje
 // @Failure 400 {object} models.ErrorResponse
 // @Failure 500 {object} models.ErrorResponse
-// @Router /send-mensaje-to-user/{user_id} [post]
+// @Router /send-mensaje-to-user/:user_id [post]
 // @Security BearerAuth
 func SendMensajeToUser(c *gin.Context) {
 	var input sendMensajeToUserInput

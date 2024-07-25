@@ -3722,7 +3722,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/send-mensaje-to-user/{user_id}": {
+        "/send-mensaje-to-user/:user_id": {
             "post": {
                 "security": [
                     {
@@ -3762,6 +3762,71 @@ const docTemplate = `{
                         "required": true,
                         "schema": {
                             "$ref": "#/definitions/controllers.sendMensajeToUserInput"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.Mensaje"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/models.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/models.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/send_telegram/{id}": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Envía un mensaje a un usuario específico basado en su ID",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "mensaje"
+                ],
+                "summary": "Envía un mensaje a un usuario específico basado en su ID",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Bearer token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "ID del usuario",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Mensaje",
+                        "name": "mensaje",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/controllers.sendMessageInput"
                         }
                     }
                 ],
@@ -4082,7 +4147,7 @@ const docTemplate = `{
                     {
                         "type": "string",
                         "description": "ID del usuario",
-                        "name": "user_id",
+                        "name": "id",
                         "in": "path",
                         "required": true
                     }
@@ -4949,6 +5014,17 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "tie": {
+                    "type": "string"
+                }
+            }
+        },
+        "controllers.sendMessageInput": {
+            "type": "object",
+            "required": [
+                "mensaje"
+            ],
+            "properties": {
+                "mensaje": {
                     "type": "string"
                 }
             }
@@ -5915,7 +5991,7 @@ const docTemplate = `{
 // SwaggerInfo holds exported Swagger Info so clients can modify it
 var SwaggerInfo = &swag.Spec{
 	Version:          "1.0",
-	Host:             "localhost:8080",
+	Host:             "10.51.16.147:8080",
 	BasePath:         "/",
 	Schemes:          []string{},
 	Title:            "API",

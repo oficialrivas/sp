@@ -17,7 +17,7 @@ import (
 // @title API 
 // @description API SISTEMA DE EXPLORACION POPULAR.
 // @version 1.0
-// @host localhost:8080
+// @host 10.51.16.147:8080
 // @BasePath /
 // @securityDefinitions.apikey BearerAuth
 // @in header

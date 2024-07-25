@@ -184,6 +184,13 @@ definitions:
     - descripcion
     - tie
     type: object
+  controllers.sendMessageInput:
+    properties:
+      mensaje:
+        type: string
+    required:
+    - mensaje
+    type: object
   models.Caso:
     properties:
       area:
@@ -810,7 +817,7 @@ definitions:
       valoracion:
         type: string
     type: object
-host: localhost:8080
+host: 10.51.16.147:8080
 info:
   contact: {}
   description: API SISTEMA DE EXPLORACION POPULAR.
@@ -3266,7 +3273,7 @@ paths:
       summary: Renueva el accessToken
       tags:
       - users
-  /send-mensaje-to-user/{user_id}:
+  /send-mensaje-to-user/:user_id:
     post:
       consumes:
       - application/json
@@ -3288,6 +3295,48 @@ paths:
         required: true
         schema:
           $ref: '#/definitions/controllers.sendMensajeToUserInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Mensaje'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Envía un mensaje a un usuario específico basado en su ID
+      tags:
+      - mensaje
+  /send_telegram/{id}:
+    post:
+      consumes:
+      - application/json
+      description: Envía un mensaje a un usuario específico basado en su ID
+      parameters:
+      - description: Bearer token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: ID del usuario
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Mensaje
+        in: body
+        name: mensaje
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.sendMessageInput'
       produces:
       - application/json
       responses:
@@ -3493,7 +3542,7 @@ paths:
         type: string
       - description: ID del usuario
         in: path
-        name: user_id
+        name: id
         required: true
         type: string
       produces:

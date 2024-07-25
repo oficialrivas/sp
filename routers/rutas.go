@@ -14,6 +14,7 @@ func SetupRouter(r *gin.Engine) {
 	r.POST("/gestion", controllers.GetRecordsByAreaAndPeriod)
 	r.POST("/gestion/por-area", controllers.GetRecordsCountByAreaAndPeriod)
 	r.POST("/websms", controllers.WebsmsHandler)  
+	r.POST("/webtele", controllers.Websmstelegram)  
 	r.POST("/gestion/area-modalidad", controllers.GetRecordsCountByAreaAndModalidad)
 	r.POST("/gestion/user", controllers.GetRecordsByUserAndPeriod)
     r.POST("/gestion/user-area-modalidad", controllers.GetRecordsCountByUserAndModalidad)
@@ -120,7 +121,8 @@ func SetupRouter(r *gin.Engine) {
 		protected.PUT("/mensajes/:id/procesado", middleware.RoleRequired("admin", "superuser", "analyst"), controllers.UpdateMensajeStatus)
 		protected.POST("/mensajes", middleware.RoleRequired("admin", "superuser", "analyst", "user"), controllers.CreateMensaje)
 		protected.POST("/create-and-send-mensaje", middleware.RoleRequired("admin", "superuser", "analyst", "user"), controllers.CreateAndSendMensaje)
-		protected.POST("/send-mensaje-to-user/:user_id", middleware.RoleRequired("admin", "superuser", "analyst", "user"), controllers.SendMensajeToUser)
+		protected.POST("/send-mensaje-to-user/:id", middleware.RoleRequired("admin", "superuser", "analyst", "user"), controllers.SendMensajeToUser)
+		protected.POST("/send_telegram/:id", middleware.RoleRequired("admin", "superuser", "analyst", "user"), controllers.SendMessageHandler)
 
 		// CRUD para Redes
 		protected.POST("/redes", middleware.RoleRequired("admin", "superuser", "user"), controllers.CreateRedes)

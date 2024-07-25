@@ -382,14 +382,19 @@ func UpdatePassword(c *gin.Context) {
 // @Accept json
 // @Produce json
 // @Param Authorization header string true "Bearer token"
-// @Param user_id path string true "ID del usuario"
+// @Param id path string true "ID del usuario"
 // @Success 200 {array} models.Mensaje
 // @Failure 400 {object} models.ErrorResponse
 // @Failure 404 {object} models.ErrorResponse
 // @Router /users/{id}/messages [get]
 // @Security ApiKeyAuth
 func GetMensajesByUserID(c *gin.Context) {
-	userID := c.Param("user_id")
+	userID := c.Param("id")
+	if userID == "" {
+		c.JSON(http.StatusBadRequest, models.ErrorResponse{Error: "User ID is required"})
+		return
+	}
+
 	var mensajes []models.Mensaje
 	if err := configs.DB.Where("user_id = ?", userID).Find(&mensajes).Error; err != nil {
 		c.JSON(http.StatusNotFound, models.ErrorResponse{Error: "Mensajes no encontrados"})
