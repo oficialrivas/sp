@@ -87,6 +87,7 @@ func WebsmsHandler(c *gin.Context) {
 		Modalidad:   "", // Assuming this comes from elsewhere, set as needed
 		Nombre:      "", // Assuming this comes from elsewhere, set as needed
 		Parroquia:   "", // Assuming this comes from elsewhere, set as needed
+		Canal:   "SMS", // Assuming this comes from elsewhere, set as needed
 		REDI:        user.REDI,
 		ZODI:        user.Zodi,
 		ADI:         user.ADI,

@@ -32,6 +32,11 @@ func SetupRouter(r *gin.Engine) {
 		protected.GET("/users/:id/otp-setup", middleware.RoleRequired("admin"), controllers.SetupOTP)
 		protected.PUT("/users/:id/password", middleware.RoleRequired("admin"), controllers.UpdatePassword)
 		protected.GET("/users/:id/messages", middleware.RoleRequired("admin", "superuser", "analyst"), controllers.GetMensajesByUserID)
+		protected.GET("/users/nivel", middleware.RoleRequired("admin", "superuser", "analyst"), controllers.GetUsersByNivel)
+		protected.GET("/users-with-unprocessed-messages", middleware.RoleRequired("admin", "superuser", "analyst"), controllers.GetUsersWithUnprocessedMessages)
+		protected.GET("/users-with-unprocessed-messages-by-redi/:redi", middleware.RoleRequired("admin", "superuser", "analyst"), controllers.GetUsersWithUnprocessedMessagesByREDI)
+		protected.GET("/users-with-unprocessed-messages-by-redi-and-nivel/:redi", middleware.RoleRequired("admin", "superuser", "analyst"), controllers.GetUsersWithUnprocessedMessagesByREDIAndNivel)
+		protected.GET("/users-unprocessed-messages-user", middleware.RoleRequired("admin", "superuser", "analyst"), controllers.GetMensajeUser)
 		
 
 		// CRUD para Caso
@@ -123,6 +128,8 @@ func SetupRouter(r *gin.Engine) {
 		protected.POST("/create-and-send-mensaje", middleware.RoleRequired("admin", "superuser", "analyst", "user"), controllers.CreateAndSendMensaje)
 		protected.POST("/send-mensaje-to-user/:id", middleware.RoleRequired("admin", "superuser", "analyst", "user"), controllers.SendMensajeToUser)
 		protected.POST("/send_telegram/:id", middleware.RoleRequired("admin", "superuser", "analyst", "user"), controllers.SendMessageHandler)
+		protected.POST("/send_messages_by_redi_tele/:redi", middleware.RoleRequired("admin", "superuser", "analyst", "user"), controllers.SendMessagesByRediHandler)
+		
 
 		// CRUD para Redes
 		protected.POST("/redes", middleware.RoleRequired("admin", "superuser", "user"), controllers.CreateRedes)

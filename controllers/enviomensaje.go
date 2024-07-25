@@ -14,6 +14,15 @@ import (
 	"github.com/oficialrivas/sgi/utils"
 )
 
+// createAndSendMensajeInput es la estructura para el cuerpo de la solicitud de CreateAndSendMensaje
+type createAndSendMensajeInput struct {
+	Descripcion string `json:"descripcion" binding:"required"`
+	REDI        string `json:"redi" binding:"required"`
+	ZODI        string `json:"zodi" binding:"required"`
+	ADI         string `json:"adi" binding:"required"`
+	Procesado   bool   `json:"procesado" binding:"required"`
+}
+
 // CreateAndSendMensaje crea un mensaje y lo envía a un webhook
 // @Summary Crea un nuevo registro de Mensaje y lo envía a un webhook
 // @Description Crea un nuevo registro de Mensaje con los datos proporcionados y lo envía a un webhook
@@ -61,7 +70,7 @@ func CreateAndSendMensaje(c *gin.Context) {
 		REDI:        input.REDI,
 		ZODI:        input.ZODI,
 		ADI:         input.ADI,
-		Tie:         input.Tie,
+		Canal:        "SMS", // Establecer el tipo como "saliente"
 		UserID:      uuid.MustParse(userID),
 		Tipo:        "saliente", // Establecer el tipo como "saliente"
 		Procesado:   input.Procesado,
@@ -87,6 +96,12 @@ func CreateAndSendMensaje(c *gin.Context) {
 	c.JSON(http.StatusOK, mensaje)
 }
 
+// sendMensajeToUserInput es la estructura para el cuerpo de la solicitud de SendMensajeToUser
+type sendMensajeToUserInput struct {
+	Descripcion string `json:"descripcion" binding:"required"`
+	REDI        string `json:"redi" binding:"required"`
+}
+
 // SendMensajeToUser envía un mensaje a un usuario específico basado en su ID
 // @Summary Envía un mensaje a un usuario específico basado en su ID
 // @Description Envía un mensaje a un usuario específico basado en su ID
@@ -94,12 +109,12 @@ func CreateAndSendMensaje(c *gin.Context) {
 // @Accept json
 // @Produce json
 // @Param Authorization header string true "Bearer token"
-// @Param user_id path string true "ID del usuario"
+// @Param id path string true "ID del usuario"
 // @Param mensaje body sendMensajeToUserInput true "Mensaje"
 // @Success 200 {object} models.Mensaje
 // @Failure 400 {object} models.ErrorResponse
 // @Failure 500 {object} models.ErrorResponse
-// @Router /send-mensaje-to-user/:user_id [post]
+// @Router /send-mensaje-to-user/{id} [post]
 // @Security BearerAuth
 func SendMensajeToUser(c *gin.Context) {
 	var input sendMensajeToUserInput
@@ -109,7 +124,7 @@ func SendMensajeToUser(c *gin.Context) {
 	}
 
 	// Obtener el ID del usuario desde los parámetros de la URL
-	userIDParam := c.Param("user_id")
+	userIDParam := c.Param("id")
 	userID, err := uuid.Parse(userIDParam)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid user ID"})
@@ -140,12 +155,12 @@ func SendMensajeToUser(c *gin.Context) {
 	mensaje := models.Mensaje{
 		Descripcion: input.Descripcion,
 		Fecha:       time.Now(), // Establecer la fecha automáticamente
-		REDI:        user.REDI,
+		REDI:        input.REDI,
 		ZODI:        user.Zodi,
 		ADI:         user.ADI,
-		Tie:         input.Tie,
-		UserID:      userID,
+		UserID:      user.ID,
 		Tipo:        "saliente", // Establecer el tipo como "saliente"
+		Canal:        "SMS", // Establecer el tipo como "saliente"
 		Procesado:   false, // Assuming this should be set to false when sending the message
 	}
 
@@ -155,40 +170,31 @@ func SendMensajeToUser(c *gin.Context) {
 	}
 
 	// Enviar el mensaje al usuario específico
-	sendToWebhook(user.Telefono, input.Descripcion, user.REDI)
+	sendToWebhook(user.Telefono, input.Descripcion, input.REDI)
 
 	c.JSON(http.StatusOK, mensaje)
-}
-
-// createAndSendMensajeInput es la estructura para el cuerpo de la solicitud de CreateAndSendMensaje
-type createAndSendMensajeInput struct {
-	Descripcion string `json:"descripcion" binding:"required"`
-	REDI        string `json:"redi" binding:"required"`
-	ZODI        string `json:"zodi" binding:"required"`
-	ADI         string `json:"adi" binding:"required"`
-	Tie         string `json:"tie" binding:"required"`
-	Procesado   bool   `json:"procesado" binding:"required"`
-}
-
-// sendMensajeToUserInput es la estructura para el cuerpo de la solicitud de SendMensajeToUser
-type sendMensajeToUserInput struct {
-	Descripcion string `json:"descripcion" binding:"required"`
-	Tie         string `json:"tie" binding:"required"`
 }
 
 // sendToWebhook envía una solicitud POST al webhook con el mensaje y los detalles del usuario
 func sendToWebhook(number string, text string, redi string) {
 	smsc := map[string]string{
-		"Guayana": "gua-llan", "los llanos": "gua-llan",
-		"central": "cen-cap", "capital": "cen-cap",
-		"andes": "and-occi", "occidental": "and-occi",
+		"Guayana": "gua-lla", "los llanos": "gua-lla",
+		"central": "cap-cen", "capital": "cap-cen",
+		"andes": "occ-and", "occidental": "occ-and",
 		"maritima": "main-ori", "oriental": "main-ori",
 	}
 
-	payload := map[string]interface{}{
-		"Text":   text,
-		"SMSC":   map[string]interface{}{"Location": smsc[redi]},
-		"Number": number,
+	// Verificar y obtener el valor de smsc
+	region, exists := smsc[redi]
+	if !exists {
+		fmt.Printf("Error: REDI value '%s' is not mapped in smsc\n", redi)
+		return
+	}
+
+	payload := map[string]string{
+		"text":   text,
+		"region": region,
+		"number": number,
 	}
 
 	jsonPayload, err := json.Marshal(payload)
@@ -197,7 +203,9 @@ func sendToWebhook(number string, text string, redi string) {
 		return
 	}
 
-	resp, err := http.Post("http://webhook.url", "application/json", bytes.NewBuffer(jsonPayload))
+	fmt.Printf("Sending payload: %s\n", string(jsonPayload)) // Añadir esto para depuración
+
+	resp, err := http.Post("http://10.51.12.77:8383/send_sms", "application/json", bytes.NewBuffer(jsonPayload))
 	if err != nil {
 		fmt.Printf("Failed to send request to webhook: %v\n", err)
 		return

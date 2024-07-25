@@ -1,21 +1,25 @@
 package controllers
 
 import (
+	"bytes"
+	"encoding/json"
+	"fmt"
 	"net/http"
 	"time"
+
 	"path/filepath"
+
 	"github.com/oficialrivas/sgi/utils"
 
 	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 	"github.com/oficialrivas/sgi/config"
 	"github.com/oficialrivas/sgi/models"
-	"github.com/google/uuid"
 )
 
-
-// CreateIIO crea un nuevo registro de IIO
-// @Summary Crea un nuevo registro de IIO
-// @Description Crea un nuevo registro de IIO con los datos proporcionados
+// CreateIIO crea un nuevo registro de IIO y lo envía a un webhook
+// @Summary Crea un nuevo registro de IIO y lo envía a un webhook
+// @Description Crea un nuevo registro de IIO con los datos proporcionados y lo envía a un webhook
 // @Tags iio
 // @Accept multipart/form-data
 // @Produce json
@@ -117,9 +121,33 @@ func CreateIIO(c *gin.Context) {
 		return
 	}
 
+	// Enviar el mensaje al webhook
+	payload := map[string]string{
+		"mensaje": iio.Descripcion,
+		"iio_id":  iio.ID.String(),
+		"jwt":     tokenString,
+	}
+
+	jsonPayload, err := json.Marshal(payload)
+	if err != nil {
+		fmt.Printf("Failed to marshal payload: %v\n", err)
+	} else {
+		go func() {
+			resp, err := http.Post("http://10.51.16.147:8080/webhook", "application/json", bytes.NewBuffer(jsonPayload))
+			if err != nil {
+				fmt.Printf("Failed to send request to webhook: %v\n", err)
+				return
+			}
+			defer resp.Body.Close()
+
+			if resp.StatusCode != http.StatusOK {
+				fmt.Printf("Webhook responded with status: %v\n", resp.StatusCode)
+			}
+		}()
+	}
+
 	c.JSON(http.StatusOK, iio)
 }
-
 // GetIIO obtiene un IIO por su ID
 // @Summary Obtiene un IIO por su ID
 // @Description Obtiene los datos de un IIO por su ID

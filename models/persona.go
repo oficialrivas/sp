@@ -19,7 +19,7 @@ type Persona struct {
 	Nacionalidad []Nacionalidad `gorm:"many2many:persona_nacionalidad;" json:"nacionalidad"`
 	EstadoCivil  string      `json:"estado_civil"`
 	Cedula       string      `gorm:"unique" json:"cedula"`
-	Correo       string      `gorm:"unique" json:"correo"`
+	Correo       string      `json:"correo"`
 	Telefono     string      `json:"telefono"`
 	Profesion    string      `json:"profesion"`
 	Ideologia    string      `json:"ideologia"`

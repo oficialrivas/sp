@@ -16,6 +16,7 @@ type Mensaje struct {
 	ADI         string    `json:"adi"`
 	Modalidad    string    `json:"modalidad"`
 	Tipo          string    `json:"tipo"`
+	Canal          string    `json:"canal"`
 	Tie          string    `json:"tie"`
 	Fecha        time.Time `json:"fecha"`
 	Lugar        string    `json:"lugar"`

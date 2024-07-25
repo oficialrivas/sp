@@ -88,6 +88,7 @@ func Websmstelegram(c *gin.Context) {
 		Modalidad:   "", // Assuming this comes from elsewhere, set as needed
 		Nombre:      data.Usuario.FirstName + " " + data.Usuario.LastName, // Combining first and last name
 		Parroquia:   "", // Assuming this comes from elsewhere, set as needed
+		Canal:   "Telegram", // Assuming this comes from elsewhere, set as needed
 		REDI:        user.REDI,
 		ZODI:        user.Zodi,
 		ADI:         user.ADI,

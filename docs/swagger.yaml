@@ -162,8 +162,6 @@ definitions:
         type: boolean
       redi:
         type: string
-      tie:
-        type: string
       zodi:
         type: string
     required:
@@ -171,18 +169,17 @@ definitions:
     - descripcion
     - procesado
     - redi
-    - tie
     - zodi
     type: object
   controllers.sendMensajeToUserInput:
     properties:
       descripcion:
         type: string
-      tie:
+      redi:
         type: string
     required:
     - descripcion
-    - tie
+    - redi
     type: object
   controllers.sendMessageInput:
     properties:
@@ -475,6 +472,8 @@ definitions:
       adi:
         type: string
       area:
+        type: string
+      canal:
         type: string
       created_at:
         type: string
@@ -2012,7 +2011,8 @@ paths:
     post:
       consumes:
       - multipart/form-data
-      description: Crea un nuevo registro de IIO con los datos proporcionados
+      description: Crea un nuevo registro de IIO con los datos proporcionados y lo
+        envía a un webhook
       parameters:
       - description: Bearer token
         in: header
@@ -2090,7 +2090,7 @@ paths:
             $ref: '#/definitions/models.ErrorResponse'
       security:
       - ApiKeyAuth: []
-      summary: Crea un nuevo registro de IIO
+      summary: Crea un nuevo registro de IIO y lo envía a un webhook
       tags:
       - iio
   /iios/{id}:
@@ -3273,7 +3273,7 @@ paths:
       summary: Renueva el accessToken
       tags:
       - users
-  /send-mensaje-to-user/:user_id:
+  /send-mensaje-to-user/{id}:
     post:
       consumes:
       - application/json
@@ -3286,7 +3286,7 @@ paths:
         type: string
       - description: ID del usuario
         in: path
-        name: user_id
+        name: id
         required: true
         type: string
       - description: Mensaje
@@ -3313,6 +3313,49 @@ paths:
       security:
       - BearerAuth: []
       summary: Envía un mensaje a un usuario específico basado en su ID
+      tags:
+      - mensaje
+  /send_messages_by_redi_tele/{redi}:
+    post:
+      consumes:
+      - application/json
+      description: Envía mensajes a todos los usuarios en una REDI específica
+      parameters:
+      - description: Bearer token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: REDI del usuario
+        in: path
+        name: redi
+        required: true
+        type: string
+      - description: Mensaje
+        in: body
+        name: mensaje
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.sendMessageInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Envía mensajes a todos los usuarios en una REDI específica
       tags:
       - mensaje
   /send_telegram/{id}:
@@ -3374,8 +3417,6 @@ paths:
       responses:
         "200":
           description: OK
-          schema:
-            $ref: '#/definitions/models.User'
         "400":
           description: Bad Request
           schema:
@@ -3415,6 +3456,145 @@ paths:
       security:
       - BearerAuth: []
       summary: Obtiene todos los usuarios
+      tags:
+      - users
+  /users-unprocessed-messages-user:
+    get:
+      consumes:
+      - application/json
+      description: Obtiene una lista de todos los usuarios con nivel "user" que tienen
+        mensajes con el campo procesado en false
+      parameters:
+      - description: Bearer token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.User'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Obtiene todos los usuarios con nivel "user" que tienen mensajes no
+        procesados
+      tags:
+      - users
+  /users-with-unprocessed-messages:
+    get:
+      consumes:
+      - application/json
+      description: Obtiene una lista de todos los usuarios que tienen mensajes no
+        procesados
+      parameters:
+      - description: Bearer token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.User'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Obtiene todos los usuarios con mensajes no procesados
+      tags:
+      - users
+  /users-with-unprocessed-messages-by-redi-and-nivel/{redi}:
+    get:
+      consumes:
+      - application/json
+      description: Obtiene una lista de todos los usuarios de una REDI específica
+        con mensajes no procesados
+      parameters:
+      - description: Bearer token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: REDI
+        in: path
+        name: redi
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.User'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Obtiene todos los usuarios de una REDI específica con mensajes no procesados
+      tags:
+      - users
+  /users-with-unprocessed-messages-by-redi/{redi}:
+    get:
+      consumes:
+      - application/json
+      description: Obtiene una lista de todos los usuarios de una REDI específica
+        que tienen mensajes no procesados
+      parameters:
+      - description: Bearer token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: REDI
+        in: path
+        name: redi
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.User'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Obtiene todos los usuarios de una REDI específica con mensajes no procesados
       tags:
       - users
   /users/{id}:
@@ -3644,6 +3824,44 @@ paths:
       summary: Actualiza la contraseña de un usuario
       tags:
       - OTP
+  /users/nivel:
+    get:
+      consumes:
+      - application/json
+      description: Obtiene una lista de usuarios que coinciden con el nivel proporcionado
+      parameters:
+      - description: Bearer token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: Nivel del usuario (admin, superuser, analyst, user)
+        in: query
+        name: nivel
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.User'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Obtiene los usuarios por nivel
+      tags:
+      - users
   /vehiculos:
     post:
       consumes:
