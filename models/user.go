@@ -15,15 +15,15 @@ type User struct {
 	Apellido   string         `json:"apellido"`
 	REDI       string         `json:"redi"`
 	ADI        string         `json:"adi"`
-	Zodi        string         `json:"zodi"`
+	Zodi       string         `json:"zodi"`
 	Fecha      time.Time      `json:"fecha_nacimiento"`
 	Parroquia  string         `json:"parroquia"`
 	Tie        string         `json:"tie"`
-	Alias        string         `json:"alias"`
-	Descripcion        string `json:"descripcion"`
+	Alias      string         `json:"alias"`
+	Descripcion string        `json:"descripcion"`
 	Cedula     string         `gorm:"unique" json:"cedula"`
 	Telefono   string         `gorm:"unique" json:"telefono"`
-	Usuario    string         `json:"u_telegran"`
+	Usuario    string         `json:"u_telegram"`
 	Hash       string         `json:"hash"`
 	Credencial string         `gorm:"unique" json:"credencial"`
 	Correo     string         `gorm:"unique" json:"correo"`
@@ -57,5 +57,10 @@ func (user *User) BeforeCreate(tx *gorm.DB) (err error) {
 		return err
 	}
 	user.UpdatedAt = user.CreatedAt
+
+	if user.Usuario == "" {
+		user.Usuario = "N/A"
+	}
+
 	return nil
 }

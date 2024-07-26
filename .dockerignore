@@ -1,0 +1,16 @@
+# Ignorar el binario de la aplicación
+main
+
+# Ignorar los archivos de Go que no se necesitan
+*.go
+
+# Ignorar el directorio de dependencias
+vendor/
+
+# Ignorar los archivos y directorios de Git
+.git
+.gitignore
+
+# Ignorar archivos específicos
+Dockerfile
+.dockerignore

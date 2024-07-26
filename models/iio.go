@@ -25,6 +25,7 @@ type IIO struct {
 	Area         string    `json:"area"`
 	Procesado   bool      `json:"procesado"`
 	ImagenURL    string    `json:"imagen_url"`
+	Mensaje     []Mensaje `gorm:"many2many:relacion_mensaje;" json:"mensajes"`
 	Relacion     []Persona `gorm:"many2many:relacion_persona;" json:"relacion"`
 	Nivel        string    `json:"nivel"`
 	UserID       uuid.UUID `gorm:"type:uuid;column:user_id"`
