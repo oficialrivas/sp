@@ -5,16 +5,15 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
-	"time"
-
 	"path/filepath"
-
-	"github.com/oficialrivas/sgi/utils"
+	"strings"
+	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 	"github.com/oficialrivas/sgi/config"
 	"github.com/oficialrivas/sgi/models"
+	"github.com/oficialrivas/sgi/utils"
 )
 
 // CreateIIO crea un nuevo registro de IIO y lo envía a un webhook
@@ -95,7 +94,8 @@ func CreateIIO(c *gin.Context) {
 			c.JSON(http.StatusInternalServerError, models.ErrorResponse{Error: "Failed to upload image"})
 			return
 		}
-		imagenURL = imagenPath
+		// Asegurar que la ruta de la imagen use barras "/"
+		imagenURL = strings.ReplaceAll(imagenPath, "\\", "/")
 	}
 
 	iio := models.IIO{
@@ -103,13 +103,13 @@ func CreateIIO(c *gin.Context) {
 		Descripcion:  input.Descripcion,
 		Fecha:        parsedDate,
 		Lugar:        input.Lugar,
-		Modalidad:    input.Modalidad,
+		Modalidad:    []models.Modalidad{}, 
+		Tie:          []models.Tie{}, 
 		Nombre:       input.Nombre,
 		Parroquia:    input.Parroquia,
 		REDI:         input.REDI,
 		ZODI:         input.ZODI,
-		Tie:          input.Tie,
-		Area:         claims.Area, // Asignar el área del usuario desde el token
+		Area:         claims.Area, 
 		UserID:       uuid.MustParse(userID.(string)),
 		ImagenURL:    imagenURL,
 		CreatedAt:    time.Now().UTC(),
@@ -148,6 +148,8 @@ func CreateIIO(c *gin.Context) {
 
 	c.JSON(http.StatusOK, iio)
 }
+
+
 // GetIIO obtiene un IIO por su ID
 // @Summary Obtiene un IIO por su ID
 // @Description Obtiene los datos de un IIO por su ID

@@ -44,6 +44,9 @@ func main() {
 	// Configura el endpoint para Swagger UI utilizando gin-swagger
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
+	// Servir archivos estáticos desde la carpeta 'static'
+	r.Static("/static", "./static")
+
 	// Configura tus rutas aquí
 	routes.SetupRouter(r) // Esta función ahora configura las rutas directamente
 

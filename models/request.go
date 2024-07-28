@@ -35,3 +35,8 @@ type LoginRequest struct {
 type RefreshTokenRequest struct {
 	RefreshToken string `json:"refreshToken" binding:"required"`
 }
+
+// UpdateTelegramRequest representa la estructura del cuerpo de la solicitud para actualizar el campo u_telegram
+type UpdateTelegramRequest struct {
+    Usuario string `json:"u_telegram" binding:"required"`
+}

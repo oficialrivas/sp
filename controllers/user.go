@@ -4,6 +4,11 @@ import (
 	"net/http"
 	"time"
 	"log"
+
+	"fmt"
+	"strings"
+	"gorm.io/gorm"
+
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 	"github.com/oficialrivas/sgi/config"
@@ -11,6 +16,7 @@ import (
 	"github.com/oficialrivas/sgi/utils"
 	"github.com/pquerna/otp/totp"
 	"golang.org/x/crypto/bcrypt"
+	"github.com/xuri/excelize/v2"
 )
 
 
@@ -633,4 +639,340 @@ func GetMensajeUser(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, users)
+}
+
+
+
+// UpdateUserTelegram actualiza el u_telegram de un usuario por su número de teléfono
+// @Summary Actualiza el u_telegram de un usuario por su número de teléfono
+// @Description Actualiza el campo u_telegram de un usuario utilizando su número de teléfono
+// @Tags users
+// @Accept json
+// @Produce json
+// @Param Authorization header string true "Bearer token"
+// @Param telefono path string true "Número de teléfono del usuario"
+// @Param body body models.UpdateTelegramRequest true "Nuevo u_telegram del usuario"
+// @Success 200 {object} models.User
+// @Failure 400 {object} models.ErrorResponse
+// @Failure 404 {object} models.ErrorResponse
+// @Failure 500 {object} models.ErrorResponse
+// @Router /users/telefono/{telefono} [put]
+// @Security BearerAuth
+func UpdateUserTelegram(c *gin.Context) {
+	telefono := c.Param("telefono")
+	var request models.UpdateTelegramRequest
+	var user models.User
+
+	// Buscar el usuario por número de teléfono
+	if err := configs.DB.First(&user, "telefono = ?", telefono).Error; err != nil {
+		c.JSON(http.StatusNotFound, models.ErrorResponse{Error: "User not found"})
+		return
+	}
+
+	// Enlazar el JSON del request a la estructura UpdateTelegramRequest
+	if err := c.ShouldBindJSON(&request); err != nil {
+		c.JSON(http.StatusBadRequest, models.ErrorResponse{Error: err.Error()})
+		return
+	}
+
+	// Actualizar el campo u_telegram del usuario
+	user.Usuario = request.Usuario
+
+	// Guardar los cambios en la base de datos
+	if err := configs.DB.Save(&user).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, models.ErrorResponse{Error: err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, user)
+}
+
+
+// UploadUsersExcel carga usuarios desde un archivo Excel
+// @Summary Carga usuarios desde un archivo Excel
+// @Description Carga usuarios desde un archivo Excel
+// @Tags users
+// @Accept multipart/form-data
+// @Param Authorization header string true "Bearer token"
+// @Produce json
+// @Security BearerAuth
+// @Param file formData file true "Archivo Excel"
+// @Failure 400 {object} models.ErrorResponse
+// @Failure 500 {object} models.ErrorResponse
+// @Router /upload_users [post]
+func UploadUsersExcel(c *gin.Context) {
+	file, err := c.FormFile("file")
+	if err != nil {
+		c.JSON(http.StatusBadRequest, models.ErrorResponse{Error: "No se proporcionó ningún archivo"})
+		return
+	}
+
+	f, err := file.Open()
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, models.ErrorResponse{Error: "No se pudo abrir el archivo"})
+		return
+	}
+	defer f.Close()
+
+	excelFile, err := excelize.OpenReader(f)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, models.ErrorResponse{Error: "No se pudo leer el archivo Excel"})
+		return
+	}
+
+	// Verificar que la hoja existe
+	sheetName := "Sheet1" // Cambia esto si el nombre de la hoja es diferente
+	sheets := excelFile.GetSheetMap()
+	found := false
+	for _, name := range sheets {
+		if strings.EqualFold(name, sheetName) {
+			found = true
+			sheetName = name
+			break
+		}
+	}
+
+	if !found {
+		c.JSON(http.StatusBadRequest, models.ErrorResponse{Error: fmt.Sprintf("La hoja %s no existe en el archivo Excel", sheetName)})
+		return
+	}
+
+	rows, err := excelFile.GetRows(sheetName)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, models.ErrorResponse{Error: "No se pudo obtener las filas del archivo Excel"})
+		return
+	}
+
+	if len(rows) == 0 {
+		c.JSON(http.StatusBadRequest, models.ErrorResponse{Error: "El archivo Excel está vacío"})
+		return
+	}
+
+	// Mapa para las posiciones de las columnas
+	columnMap := make(map[string]int)
+	for i, colName := range rows[0] {
+		columnMap[strings.ToLower(colName)] = i
+	}
+
+	var processedUsers []models.User
+
+	for _, row := range rows[1:] {
+		var request models.CreateUserRequest
+
+		if idx, exists := columnMap["cedula"]; exists && len(row) > idx {
+			request.Cedula = strings.ReplaceAll(row[idx], ".", "")
+		}
+		if idx, exists := columnMap["nombre"]; exists && len(row) > idx {
+			request.Nombre = row[idx]
+		}
+		if idx, exists := columnMap["apellido"]; exists && len(row) > idx {
+			request.Apellido = row[idx]
+		}
+		if idx, exists := columnMap["telefono"]; exists && len(row) > idx {
+			request.Telefono = row[idx]
+		}
+		if idx, exists := columnMap["usuario"]; exists && len(row) > idx {
+			request.Usuario = row[idx]
+		}
+		if idx, exists := columnMap["alias"]; exists && len(row) > idx {
+			request.Alias = row[idx]
+		}
+		if idx, exists := columnMap["descripcion"]; exists && len(row) > idx {
+			request.Descripcion = row[idx]
+		}
+		if idx, exists := columnMap["area"]; exists && len(row) > idx {
+			request.Area = row[idx]
+		}
+		if idx, exists := columnMap["tie"]; exists && len(row) > idx {
+			request.Tie = row[idx]
+		}
+		if idx, exists := columnMap["redi"]; exists && len(row) > idx {
+			request.REDI = row[idx]
+		}
+		if idx, exists := columnMap["zodi"]; exists && len(row) > idx {
+			request.Zodi = row[idx]
+		}
+		if idx, exists := columnMap["adi"]; exists && len(row) > idx {
+			request.ADI = row[idx]
+		}
+		if idx, exists := columnMap["credencial"]; exists && len(row) > idx {
+			request.Credencial = row[idx]
+		}
+		if idx, exists := columnMap["correo"]; exists && len(row) > idx {
+			request.Correo = row[idx]
+		}
+		if idx, exists := columnMap["fecha"]; exists && len(row) > idx {
+			request.Fecha, _ = time.Parse("2006-01-02", row[idx])
+		}
+
+		// Asumimos una contraseña predeterminada para los usuarios cargados desde Excel
+		request.Password = "defaultPassword"
+		// El nivel siempre será "user"
+		request.Nivel = "user"
+
+		// Buscar usuario existente por cédula
+		var user models.User
+		if err := configs.DB.Where("cedula = ?", request.Cedula).First(&user).Error; err != nil {
+			if err == gorm.ErrRecordNotFound {
+				// Crear nuevo usuario si no existe
+				hashedPassword, _ := bcrypt.GenerateFromPassword([]byte(request.Password), bcrypt.DefaultCost)
+				user = models.User{
+					ID:          uuid.New(),
+					Cedula:      request.Cedula,
+					Nombre:      request.Nombre,
+					Apellido:    request.Apellido,
+					Telefono:    request.Telefono,
+					Usuario:     request.Usuario,
+					Hash:        string(hashedPassword),
+					Credencial:  request.Credencial,
+					Correo:      request.Correo,
+					Area:        request.Area,
+					Alias:       request.Alias,
+					Fecha:       request.Fecha,
+					Descripcion: request.Descripcion,
+					Nivel:       request.Nivel, // Se asegura que el nivel sea "user"
+					Tie:         request.Tie,
+					REDI:        request.REDI,
+					Zodi:        request.Zodi,
+					ADI:         request.ADI,
+				}
+				if err := configs.DB.Create(&user).Error; err != nil {
+					c.JSON(http.StatusInternalServerError, models.ErrorResponse{Error: fmt.Sprintf("Error al crear el usuario: %v", err)})
+					return
+				}
+				processedUsers = append(processedUsers, user)
+			} else {
+				c.JSON(http.StatusInternalServerError, models.ErrorResponse{Error: fmt.Sprintf("Error al buscar la TIE: %v", err)})
+				return
+			}
+		} else {
+			// Actualizar usuario existente
+			hashedPassword, _ := bcrypt.GenerateFromPassword([]byte(request.Password), bcrypt.DefaultCost)
+			user.Nombre = request.Nombre
+			user.Apellido = request.Apellido
+			user.Telefono = request.Telefono
+			user.Usuario = request.Usuario
+			user.Hash = string(hashedPassword)
+			user.Credencial = request.Credencial
+			user.Correo = request.Correo
+			user.Area = request.Area
+			user.Alias = request.Alias
+			user.Fecha = request.Fecha
+			user.Descripcion = request.Descripcion
+			user.Nivel = "user" // Se asegura que el nivel sea "user"
+			user.Tie = request.Tie
+			user.REDI = request.REDI
+			user.Zodi = request.Zodi
+			user.ADI = request.ADI
+			if err := configs.DB.Save(&user).Error; err != nil {
+				c.JSON(http.StatusInternalServerError, models.ErrorResponse{Error: fmt.Sprintf("Error al actualizar el usuario: %v", err)})
+				return
+			}
+			processedUsers = append(processedUsers, user)
+		}
+	}
+
+	c.JSON(http.StatusOK, gin.H{"message": "Usuarios procesados correctamente", "users": processedUsers})
+}
+
+
+// DeleteUsersByCedula elimina usuarios desde un archivo Excel
+// @Summary Elimina usuarios desde un archivo Excel
+// @Description Elimina usuarios desde un archivo Excel
+// @Tags users
+// @Accept multipart/form-data
+// @Param Authorization header string true "Bearer token"
+// @Produce json
+// @Security BearerAuth
+// @Param file formData file true "Archivo Excel"
+// @Failure 400 {object} models.ErrorResponse
+// @Failure 500 {object} models.ErrorResponse
+// @Router /delete_users [post]
+func DeleteUsersByCedula(c *gin.Context) {
+	file, err := c.FormFile("file")
+	if err != nil {
+		c.JSON(http.StatusBadRequest, models.ErrorResponse{Error: "No se proporcionó ningún archivo"})
+		return
+	}
+
+	f, err := file.Open()
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, models.ErrorResponse{Error: "No se pudo abrir el archivo"})
+		return
+	}
+	defer f.Close()
+
+	excelFile, err := excelize.OpenReader(f)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, models.ErrorResponse{Error: "No se pudo leer el archivo Excel"})
+		return
+	}
+
+	// Verificar que la hoja existe
+	sheetName := "Sheet1" // Cambia esto si el nombre de la hoja es diferente
+	sheets := excelFile.GetSheetMap()
+	found := false
+	for _, name := range sheets {
+		if strings.EqualFold(name, sheetName) {
+			found = true
+			sheetName = name
+			break
+		}
+	}
+
+	if !found {
+		c.JSON(http.StatusBadRequest, models.ErrorResponse{Error: fmt.Sprintf("La hoja %s no existe en el archivo Excel", sheetName)})
+		return
+	}
+
+	rows, err := excelFile.GetRows(sheetName)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, models.ErrorResponse{Error: "No se pudo obtener las filas del archivo Excel"})
+		return
+	}
+
+	if len(rows) == 0 {
+		c.JSON(http.StatusBadRequest, models.ErrorResponse{Error: "El archivo Excel está vacío"})
+		return
+	}
+
+	// Mapa para las posiciones de las columnas
+	columnMap := make(map[string]int)
+	for i, colName := range rows[0] {
+		columnMap[strings.ToLower(colName)] = i
+	}
+
+	var deletedUsers []string
+
+	for _, row := range rows[1:] {
+		var cedula string
+		if idx, exists := columnMap["cedula"]; exists && len(row) > idx {
+			cedula = strings.ReplaceAll(row[idx], ".", "")
+		}
+
+		if cedula == "" {
+			continue // Saltar filas sin cédula
+		}
+
+		// Buscar usuario existente por cédula
+		var user models.User
+		if err := configs.DB.Where("cedula = ?", cedula).First(&user).Error; err != nil {
+			if err == gorm.ErrRecordNotFound {
+				continue // Si no se encuentra el usuario, continuar con la siguiente fila
+			} else {
+				c.JSON(http.StatusInternalServerError, models.ErrorResponse{Error: fmt.Sprintf("Error al buscar el usuario: %v", err)})
+				return
+			}
+		}
+
+		// Eliminar usuario existente
+		if err := configs.DB.Delete(&user).Error; err != nil {
+			c.JSON(http.StatusInternalServerError, models.ErrorResponse{Error: fmt.Sprintf("Error al eliminar el usuario: %v", err)})
+			return
+		}
+
+		deletedUsers = append(deletedUsers, cedula)
+	}
+
+	c.JSON(http.StatusOK, gin.H{"message": "Usuarios eliminados correctamente", "deleted_users": deletedUsers})
 }

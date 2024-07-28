@@ -414,6 +414,10 @@ definitions:
     type: object
   models.IIO:
     properties:
+      TIE:
+        items:
+          $ref: '#/definitions/models.Tie'
+        type: array
       adi:
         type: string
       area:
@@ -430,8 +434,14 @@ definitions:
         type: string
       lugar:
         type: string
+      mensajes:
+        items:
+          $ref: '#/definitions/models.Mensaje'
+        type: array
       modalidad:
-        type: string
+        items:
+          $ref: '#/definitions/models.Modalidad'
+        type: array
       nivel:
         type: string
       nombre:
@@ -446,8 +456,6 @@ definitions:
         items:
           $ref: '#/definitions/models.Persona'
         type: array
-      tie:
-        type: string
       updated_at:
         type: string
       urbanizacion:
@@ -514,6 +522,21 @@ definitions:
       userID:
         type: string
       zodi:
+        type: string
+    type: object
+  models.Modalidad:
+    properties:
+      area:
+        type: string
+      created_at:
+        type: string
+      id:
+        type: string
+      nombre:
+        type: string
+      updated_at:
+        type: string
+      userID:
         type: string
     type: object
   models.Nacionalidad:
@@ -691,6 +714,25 @@ definitions:
       user_id:
         type: string
     type: object
+  models.Tie:
+    properties:
+      area:
+        type: string
+      created_at:
+        type: string
+      id:
+        type: string
+      modalidad:
+        items:
+          $ref: '#/definitions/models.Modalidad'
+        type: array
+      nombre:
+        type: string
+      updated_at:
+        type: string
+      userID:
+        type: string
+    type: object
   models.TokenResponse:
     properties:
       accessToken:
@@ -700,6 +742,13 @@ definitions:
       refreshToken:
         description: Optional Refresh Token
         type: string
+    type: object
+  models.UpdateTelegramRequest:
+    properties:
+      u_telegram:
+        type: string
+    required:
+    - u_telegram
     type: object
   models.User:
     properties:
@@ -741,7 +790,7 @@ definitions:
         type: string
       tie:
         type: string
-      u_telegran:
+      u_telegram:
         type: string
       updated_at:
         type: string
@@ -1387,6 +1436,38 @@ paths:
       summary: Crea un nuevo registro de Mensaje y lo envía a un webhook
       tags:
       - mensaje
+  /delete_users:
+    post:
+      consumes:
+      - multipart/form-data
+      description: Elimina usuarios desde un archivo Excel
+      parameters:
+      - description: Bearer token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: Archivo Excel
+        in: formData
+        name: file
+        required: true
+        type: file
+      produces:
+      - application/json
+      responses:
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Elimina usuarios desde un archivo Excel
+      tags:
+      - users
   /direcciones:
     post:
       consumes:
@@ -2607,6 +2688,136 @@ paths:
       summary: Obtiene Mensajes filtrados
       tags:
       - mensaje
+  /modalidades:
+    get:
+      parameters:
+      - description: Bearer token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Modalidad'
+            type: array
+      summary: Obtiene todas las modalidades
+      tags:
+      - Modalidad
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Bearer token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: Datos de la Modalidad a crear
+        in: body
+        name: modalidad
+        required: true
+        schema:
+          $ref: '#/definitions/models.Modalidad'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.Modalidad'
+      summary: Crea una nueva modalidad
+      tags:
+      - Modalidad
+  /modalidades/{id}:
+    delete:
+      parameters:
+      - description: Bearer token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: ID de la modalidad a eliminar
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: Modalidad eliminada exitosamente
+      summary: Elimina una modalidad por su ID
+      tags:
+      - Modalidad
+    get:
+      parameters:
+      - description: Bearer token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: ID de la modalidad
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Modalidad'
+      summary: Obtiene una modalidad por su ID
+      tags:
+      - Modalidad
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: Bearer token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: ID de la modalidad a actualizar
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Nombre de la modalidad
+        in: body
+        name: nombre
+        required: true
+        schema:
+          type: string
+      - description: ID del usuario
+        in: body
+        name: user_id
+        required: true
+        schema:
+          type: string
+      - description: Datos de la Modalidad a actualizar
+        in: body
+        name: vehiculo
+        required: true
+        schema:
+          $ref: '#/definitions/models.Modalidad'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Modalidad'
+      summary: Actualiza una modalidad existente por su ID
+      tags:
+      - Modalidad
   /pasaportes:
     post:
       consumes:
@@ -3428,6 +3639,183 @@ paths:
       summary: Crea un nuevo usuario
       tags:
       - users
+  /ties:
+    get:
+      parameters:
+      - description: Bearer token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Tie'
+            type: array
+      summary: Obtiene todas las TIEs
+      tags:
+      - Tie
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Bearer token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: Datos de la TIE a crear
+        in: body
+        name: TIE
+        required: true
+        schema:
+          $ref: '#/definitions/models.Tie'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.Tie'
+      summary: Crea una nueva TIE
+      tags:
+      - Tie
+  /ties/{id}:
+    delete:
+      parameters:
+      - description: Bearer token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: ID de la TIE a eliminar
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: TIE eliminada exitosamente
+      summary: Elimina una TIE por su ID
+      tags:
+      - Tie
+    get:
+      description: Obtiene una TIE por su ID
+      parameters:
+      - description: Bearer token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: ID de la TIE
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Tie'
+        "404":
+          description: TIE no encontrada
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "500":
+          description: Error al buscar la TIE
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      summary: Obtiene una TIE por su ID
+      tags:
+      - Tie
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: Bearer token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: ID de la TIE a actualizar
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Nombre de la TIE
+        in: body
+        name: nombre
+        required: true
+        schema:
+          type: string
+      - description: Área de la TIE
+        in: body
+        name: area
+        required: true
+        schema:
+          type: string
+      - description: ID del usuario
+        in: body
+        name: user_id
+        required: true
+        schema:
+          type: string
+      - description: Datos de la TIE a actualizar
+        in: body
+        name: vehiculo
+        required: true
+        schema:
+          $ref: '#/definitions/models.Tie'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Tie'
+      summary: Actualiza una TIE existente por su ID
+      tags:
+      - Tie
+  /upload_users:
+    post:
+      consumes:
+      - multipart/form-data
+      description: Carga usuarios desde un archivo Excel
+      parameters:
+      - description: Bearer token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: Archivo Excel
+        in: formData
+        name: file
+        required: true
+        type: file
+      produces:
+      - application/json
+      responses:
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Carga usuarios desde un archivo Excel
+      tags:
+      - users
   /users:
     get:
       consumes:
@@ -3860,6 +4248,53 @@ paths:
       security:
       - BearerAuth: []
       summary: Obtiene los usuarios por nivel
+      tags:
+      - users
+  /users/telefono/{telefono}:
+    put:
+      consumes:
+      - application/json
+      description: Actualiza el campo u_telegram de un usuario utilizando su número
+        de teléfono
+      parameters:
+      - description: Bearer token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: Número de teléfono del usuario
+        in: path
+        name: telefono
+        required: true
+        type: string
+      - description: Nuevo u_telegram del usuario
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/models.UpdateTelegramRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.User'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Actualiza el u_telegram de un usuario por su número de teléfono
       tags:
       - users
   /vehiculos:

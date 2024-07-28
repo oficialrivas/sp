@@ -55,6 +55,8 @@ func WebsmsHandler(c *gin.Context) {
 		return
 	}
 
+	
+
 	// Make a POST request to /generate-token
 	resp, err := http.Post("http://localhost:8080/generate-token", "application/json", bytes.NewBuffer(jsonPayload))
 	if err != nil {
@@ -85,7 +87,7 @@ func WebsmsHandler(c *gin.Context) {
 		Fecha:       parsedDate,
 		Lugar:       "", // Assuming this comes from elsewhere, set as needed
 		Modalidad:   "", // Assuming this comes from elsewhere, set as needed
-		Nombre:      "", // Assuming this comes from elsewhere, set as needed
+		Nombre:      user.Nombre + " " + user.Apellido, // Combining first and last name
 		Parroquia:   "", // Assuming this comes from elsewhere, set as needed
 		Canal:   "SMS", // Assuming this comes from elsewhere, set as needed
 		REDI:        user.REDI,

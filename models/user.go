@@ -25,8 +25,8 @@ type User struct {
 	Telefono   string         `gorm:"unique" json:"telefono"`
 	Usuario    string         `json:"u_telegram"`
 	Hash       string         `json:"hash"`
-	Credencial string         `gorm:"unique" json:"credencial"`
-	Correo     string         `gorm:"unique" json:"correo"`
+	Credencial string         `json:"credencial"`
+	Correo     string         `json:"correo"`
 	Area       string         `json:"area"`
 	Nivel      string         `json:"nivel"`
 	OTPSecret  string         `json:"otp_secret"` 
@@ -41,6 +41,7 @@ var ValidAreas = []string{
 	"SEP",
 	"CI2",
 	"TIC",
+	"UEPE",
 	"CI2 ESPECIAL",
 	"Despacho",
 }
@@ -58,9 +59,6 @@ func (user *User) BeforeCreate(tx *gorm.DB) (err error) {
 	}
 	user.UpdatedAt = user.CreatedAt
 
-	if user.Usuario == "" {
-		user.Usuario = "N/A"
-	}
-
+	
 	return nil
 }

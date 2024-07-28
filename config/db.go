@@ -38,11 +38,10 @@ func ConnectToDB() {
 	log.Println("Database connection successfully established")
 	DB = db
 
-	
 	// Migrar las tablas
 	err = db.AutoMigrate(
 		&models.User{}, &models.IIO{}, &models.Persona{}, &models.Vehiculo{},
-		&models.Empresa{}, &models.Direccion{}, &models.Pasaporte{}, &models.Visa{},
+		&models.Empresa{}, &models.Direccion{}, &models.Pasaporte{}, &models.Visa{}, &models.Tie{}, &models.Modalidad{},
 		&models.Documento{}, &models.Caso{}, &models.Correo{}, &models.Redes{}, &models.TemporaryAccess{}, &models.Nacionalidad{}, &models.Mensaje{},
 	)
 	if err != nil {
@@ -52,8 +51,6 @@ func ConnectToDB() {
 	// Crear índices de texto completo después de la migración
 	createFullTextIndexes(db)
 }
-
-
 
 func createFullTextIndexes(db *gorm.DB) {
 	// Verificar si la tabla persona existe
@@ -74,4 +71,3 @@ func createFullTextIndexes(db *gorm.DB) {
 
 	log.Println("Fulltext index on persona created successfully")
 }
-

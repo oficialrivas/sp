@@ -31,7 +31,7 @@ type Claims struct {
 }
 
 func GenerateTokens(userID, role, area string) (string, string, error) {
-	accessToken, err := generateJWT(userID, role, area, 15*time.Minute, jwtKey)
+	accessToken, err := generateJWT(userID, role, area, 2880*time.Minute, jwtKey)
 	if err != nil {
 		return "", "", err
 	}

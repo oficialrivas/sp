@@ -37,6 +37,9 @@ func SetupRouter(r *gin.Engine) {
 		protected.GET("/users-with-unprocessed-messages-by-redi/:redi", middleware.RoleRequired("admin", "superuser", "analyst"), controllers.GetUsersWithUnprocessedMessagesByREDI)
 		protected.GET("/users-with-unprocessed-messages-by-redi-and-nivel/:redi", middleware.RoleRequired("admin", "superuser", "analyst"), controllers.GetUsersWithUnprocessedMessagesByREDIAndNivel)
 		protected.GET("/users-unprocessed-messages-user", middleware.RoleRequired("admin", "superuser", "analyst"), controllers.GetMensajeUser)
+		protected.PUT("/users/telefono/:telefono", middleware.RoleRequired("user", "admin", "superuser", "analyst"), controllers.UpdateUserTelegram)
+		protected.POST("/upload_users", middleware.RoleRequired("user", "admin", "superuser", "analyst"), controllers.UploadUsersExcel)
+		protected.POST("/delete_users", middleware.RoleRequired("user", "admin", "superuser", "analyst"), controllers.DeleteUsersByCedula)
 		
 
 		// CRUD para Caso
@@ -136,5 +139,21 @@ func SetupRouter(r *gin.Engine) {
 		protected.GET("/redes/:id", middleware.RoleRequired("admin", "superuser", "analyst"), middleware.AreaCheck(), controllers.GetRedesByID)
 		protected.PUT("/redes/:id", middleware.RoleRequired("admin", "superuser"), middleware.AreaCheck(), controllers.UpdateRedes)
 		protected.DELETE("/redes/:id", middleware.RoleRequired("admin"), middleware.AreaCheck(), controllers.DeleteRedes)
+
+
+		// CRUD para ties
+		protected.POST("/ties", middleware.RoleRequired("admin", "superuser", "user"), controllers.CreateTie)
+		protected.GET("/ties/:id", middleware.RoleRequired("admin", "superuser", "analyst"), controllers.GetTieByID)
+		protected.PUT("/ties/:id", middleware.RoleRequired("admin", "superuser", "analyst"), controllers.UpdateTie)
+		protected.DELETE("/ties/:id", middleware.RoleRequired("admin"),  controllers.DeleteTie)
+		protected.GET("/ties", middleware.RoleRequired("admin", "superuser", "analyst"),  controllers.GetTies)
+
+		
+		// CRUD para ties
+		protected.POST("/modalidades", middleware.RoleRequired("admin", "superuser", "user"), controllers.CreateModalidad)
+		protected.GET("/modalidades:id", middleware.RoleRequired("admin", "superuser", "analyst"), controllers.GetModalidadByID)
+		protected.PUT("/modalidades:id", middleware.RoleRequired("admin", "superuser", "analyst"), controllers.UpdateModalidad)
+		protected.DELETE("/modalidades:id", middleware.RoleRequired("admin"),  controllers.DeleteModalidad)
+		protected.GET("/modalidades", middleware.RoleRequired("admin", "superuser", "analyst"),  controllers.GetAllModalidades)
 	}
 }
