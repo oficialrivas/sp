@@ -25,6 +25,7 @@ type IIO struct {
 	Nombre       string      `json:"nombre"`
 	Area         string      `json:"area"`
 	Procesado    bool        `json:"procesado"`
+	Valor    bool       	 `json:"valor"`
 	ImagenURL    string      `json:"imagen_url"`
 	Mensaje      []Mensaje   `gorm:"many2many:relacion_mensaje;" json:"mensajes"`
 	Relacion     []Persona   `gorm:"many2many:relacion_persona;" json:"relacion"`

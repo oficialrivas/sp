@@ -218,7 +218,5 @@ func Websmstelegram(c *gin.Context) {
 		}
 
 		c.JSON(http.StatusOK, mensaje)
-	} else {
-		
-	}
+	} 
 }

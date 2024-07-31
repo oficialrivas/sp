@@ -40,6 +40,9 @@ func SetupRouter(r *gin.Engine) {
 		protected.PUT("/users/telefono/:telefono", middleware.RoleRequired("user", "admin", "superuser", "analyst"), controllers.UpdateUserTelegram)
 		protected.POST("/upload_users", middleware.RoleRequired("user", "admin", "superuser", "analyst"), controllers.UploadUsersExcel)
 		protected.POST("/delete_users", middleware.RoleRequired("user", "admin", "superuser", "analyst"), controllers.DeleteUsersByCedula)
+		protected.GET("/users/cedula/:cedula", middleware.RoleRequired("admin", "superuser", "analyst"), controllers.GetUserByCedula)
+		protected.GET("/users/alias/:alias", middleware.RoleRequired("admin", "superuser", "analyst"), controllers.GetUserByAlias)
+		protected.GET("/users/telefono/:telefono", middleware.RoleRequired("admin", "superuser", "analyst"), controllers.GetUserByTelefono)
 		
 
 		// CRUD para Caso
@@ -107,6 +110,8 @@ func SetupRouter(r *gin.Engine) {
 		protected.DELETE("/iios/:id", middleware.RoleRequired("admin"), middleware.AreaCheck(), controllers.DeleteIIO)
 		protected.GET("/iios", middleware.RoleRequired("admin", "superuser", "analyst"), middleware.AreaCheck(), controllers.GetIIOs)
 		protected.GET("/iios/filter", middleware.RoleRequired("admin", "superuser", "analyst"), controllers.GetIIOs)
+		protected.POST("/gestion/iio", middleware.RoleRequired("admin", "superuser", "analyst"), controllers.GetIIOByParameters)
+		protected.POST("/gestion/iio/modalidad", middleware.RoleRequired("admin", "superuser", "analyst"), controllers.GetIIOByModalidadAndValor)
 
 		// Configuración de acceso temporal
 		protected.POST("/configuracion/acceso-temporal", middleware.RoleRequired("admin"), controllers.GrantTemporaryAccess)

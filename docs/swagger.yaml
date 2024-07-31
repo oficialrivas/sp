@@ -462,7 +462,22 @@ definitions:
         type: string
       userID:
         type: string
+      valor:
+        type: boolean
       zodi:
+        type: string
+    type: object
+  models.IIORequestParams:
+    properties:
+      end_date:
+        type: string
+      modalidad:
+        type: string
+      redi:
+        type: string
+      start_date:
+        type: string
+      tie:
         type: string
     type: object
   models.LoginRequest:
@@ -1955,6 +1970,94 @@ paths:
         específico
       tags:
       - Registros
+  /gestion/iio:
+    post:
+      consumes:
+      - application/json
+      description: Recupera los registros de IIO en un período determinado, según
+        los parámetros REDI, temática y modalidad ingresados por el usuario
+      parameters:
+      - description: Bearer token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: Parámetros de consulta
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/models.IIORequestParams'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.IIO'
+            type: array
+        "400":
+          description: error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - ApiKeyAuth: []
+      summary: Obtiene registros de IIO por período, REDI, temática y modalidad
+      tags:
+      - iio
+  /gestion/iio/modalidad:
+    post:
+      consumes:
+      - application/json
+      description: Recupera los registros de IIO en un período determinado, según
+        los parámetros modalidad y valor ingresados por el usuario
+      parameters:
+      - description: Bearer token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: Parámetros de consulta
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/models.IIORequestParams'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.IIO'
+            type: array
+        "400":
+          description: error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - ApiKeyAuth: []
+      summary: Obtiene registros de IIO por modalidad y valor
+      tags:
+      - iio
   /gestion/por-area:
     post:
       consumes:
@@ -2091,7 +2194,7 @@ paths:
       - iio
     post:
       consumes:
-      - multipart/form-data
+      - application/json
       description: Crea un nuevo registro de IIO con los datos proporcionados y lo
         envía a un webhook
       parameters:
@@ -2100,60 +2203,12 @@ paths:
         name: Authorization
         required: true
         type: string
-      - description: Descripción del IIO
-        in: formData
-        name: descripcion
+      - description: Datos de la IIO
+        in: body
+        name: IIO
         required: true
-        type: string
-      - description: Fecha del IIO (YYYY-MM-DD)
-        in: formData
-        name: fecha
-        required: true
-        type: string
-      - description: Lugar del IIO
-        in: formData
-        name: lugar
-        required: true
-        type: string
-      - description: Modalidad del IIO
-        in: formData
-        name: modalidad
-        required: true
-        type: string
-      - description: Nombre del IIO
-        in: formData
-        name: nombre
-        required: true
-        type: string
-      - description: Parroquia del IIO
-        in: formData
-        name: parroquia
-        required: true
-        type: string
-      - description: REDI del IIO
-        in: formData
-        name: redi
-        required: true
-        type: string
-      - description: ZODI del IIO
-        in: formData
-        name: zodi
-        required: true
-        type: string
-      - description: TIE del IIO
-        in: formData
-        name: tie
-        required: true
-        type: string
-      - description: Área del IIO
-        in: formData
-        name: area
-        required: true
-        type: string
-      - description: Imagen del IIO
-        in: formData
-        name: imagen
-        type: file
+        schema:
+          $ref: '#/definitions/models.IIO'
       produces:
       - application/json
       responses:
@@ -4212,6 +4267,70 @@ paths:
       summary: Actualiza la contraseña de un usuario
       tags:
       - OTP
+  /users/alias/{alias}:
+    get:
+      consumes:
+      - application/json
+      description: Obtiene los datos de un usuario por su alias
+      parameters:
+      - description: Bearer token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: Alias del usuario
+        in: path
+        name: alias
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.User'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Obtiene un usuario por su alias
+      tags:
+      - users
+  /users/cedula/{cedula}:
+    get:
+      consumes:
+      - application/json
+      description: Obtiene los datos de un usuario por su cédula
+      parameters:
+      - description: Bearer token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: Cédula del usuario
+        in: path
+        name: cedula
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.User'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Obtiene un usuario por su cédula
+      tags:
+      - users
   /users/nivel:
     get:
       consumes:
@@ -4251,6 +4370,37 @@ paths:
       tags:
       - users
   /users/telefono/{telefono}:
+    get:
+      consumes:
+      - application/json
+      description: Obtiene los datos de un usuario por su teléfono
+      parameters:
+      - description: Bearer token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: Teléfono del usuario
+        in: path
+        name: telefono
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.User'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Obtiene un usuario por su teléfono
+      tags:
+      - users
     put:
       consumes:
       - application/json

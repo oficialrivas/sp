@@ -3,11 +3,12 @@ package controllers
 import (
 	"bytes"
 	"encoding/json"
-	"fmt"
+	
 	"net/http"
 	"path/filepath"
 	"strings"
 	"time"
+	"fmt"
 
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
@@ -16,24 +17,15 @@ import (
 	"github.com/oficialrivas/sgi/utils"
 )
 
+
 // CreateIIO crea un nuevo registro de IIO y lo envía a un webhook
 // @Summary Crea un nuevo registro de IIO y lo envía a un webhook
 // @Description Crea un nuevo registro de IIO con los datos proporcionados y lo envía a un webhook
 // @Tags iio
-// @Accept multipart/form-data
+// @Accept json
 // @Produce json
 // @Param Authorization header string true "Bearer token"
-// @Param descripcion formData string true "Descripción del IIO"
-// @Param fecha formData string true "Fecha del IIO (YYYY-MM-DD)"
-// @Param lugar formData string true "Lugar del IIO"
-// @Param modalidad formData string true "Modalidad del IIO"
-// @Param nombre formData string true "Nombre del IIO"
-// @Param parroquia formData string true "Parroquia del IIO"
-// @Param redi formData string true "REDI del IIO"
-// @Param zodi formData string true "ZODI del IIO"
-// @Param tie formData string true "TIE del IIO"
-// @Param area formData string true "Área del IIO"
-// @Param imagen formData file false "Imagen del IIO"
+// @Param IIO body models.IIO true "Datos de la IIO"
 // @Success 200 {object} models.IIO
 // @Failure 400 {object} models.ErrorResponse
 // @Failure 500 {object} models.ErrorResponse
@@ -322,5 +314,130 @@ func FilterIIOs(c *gin.Context) {
 		return
 	}
 
+	c.JSON(http.StatusOK, iios)
+}
+
+
+
+// GetIIOByParameters obtiene registros de IIO por período, REDI, temática y modalidad
+// @Summary Obtiene registros de IIO por período, REDI, temática y modalidad
+// @Description Recupera los registros de IIO en un período determinado, según los parámetros REDI, temática y modalidad ingresados por el usuario
+// @Security ApiKeyAuth
+// @Param Authorization header string true "Bearer token"
+// @Success 200 {object} map[string]interface{} "result"
+// @Tags iio
+// @Accept json
+// @Produce json
+// @Param request body models.IIORequestParams true "Parámetros de consulta"
+// @Success 200 {object} []models.IIO
+// @Failure 400 {object} map[string]string "error"
+// @Failure 500 {object} map[string]string "error"
+// @Router /gestion/iio [post]
+func GetIIOByParameters(c *gin.Context) {
+	var params models.IIORequestParams
+	if err := c.ShouldBindJSON(&params); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	// Parsear las fechas de los parámetros
+	startDate, err := time.Parse("2006-01-02", params.StartDate)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Formato de fecha inválido para start_date"})
+		return
+	}
+
+	endDate, err := time.Parse("2006-01-02", params.EndDate)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Formato de fecha inválido para end_date"})
+		return
+	}
+
+	// Validar que startDate no sea posterior a endDate
+	if startDate.After(endDate) {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "start_date no puede ser posterior a end_date"})
+		return
+	}
+
+	// Construir la consulta dinámica
+	query := configs.DB.Model(&models.IIO{}).Where("created_at BETWEEN ? AND ?", startDate, endDate)
+
+	if params.REDI != "" {
+		query = query.Where("redi = ?", params.REDI)
+	}
+	if params.Tie != "" {
+		query = query.Where("tie = ?", params.Tie)
+	}
+	if params.Modalidad != "" {
+		query = query.Where("modalidad = ?", params.Modalidad)
+	}
+
+	var iios []models.IIO
+	if err := query.Find(&iios).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	// Devolver los resultados en formato JSON
+	c.JSON(http.StatusOK, iios)
+}
+
+
+// GetIIOByModalidadAndValor obtiene registros de IIO por modalidad y valor
+// @Summary Obtiene registros de IIO por modalidad y valor
+// @Description Recupera los registros de IIO en un período determinado, según los parámetros modalidad y valor ingresados por el usuario
+// @Security ApiKeyAuth
+// @Param Authorization header string true "Bearer token"
+// @Tags iio
+// @Accept json
+// @Produce json
+// @Param request body models.IIORequestParams true "Parámetros de consulta"
+// @Success 200 {object} []models.IIO
+// @Failure 400 {object} map[string]string "error"
+// @Failure 500 {object} map[string]string "error"
+// @Router /gestion/iio/modalidad [post]
+func GetIIOByModalidadAndValor(c *gin.Context) {
+	var params models.IIORequestParams2
+	if err := c.ShouldBindJSON(&params); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	// Parsear las fechas de los parámetros
+	startDate, err := time.Parse("2006-01-02", params.StartDate)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Formato de fecha inválido para start_date"})
+		return
+	}
+
+	endDate, err := time.Parse("2006-01-02", params.EndDate)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Formato de fecha inválido para end_date"})
+		return
+	}
+
+	// Validar que startDate no sea posterior a endDate
+	if startDate.After(endDate) {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "start_date no puede ser posterior a end_date"})
+		return
+	}
+
+	// Construir la consulta dinámica
+	query := configs.DB.Model(&models.IIO{}).Where("created_at BETWEEN ? AND ?", startDate, endDate)
+
+	if params.Modalidad != "" {
+		query = query.Where("modalidad = ?", params.Modalidad)
+	}
+	if params.Valor != nil {
+		query = query.Where("valor = ?", *params.Valor)
+	}
+
+	var iios []models.IIO
+	if err := query.Find(&iios).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	// Devolver los resultados en formato JSON
 	c.JSON(http.StatusOK, iios)
 }

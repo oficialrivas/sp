@@ -976,3 +976,74 @@ func DeleteUsersByCedula(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{"message": "Usuarios eliminados correctamente", "deleted_users": deletedUsers})
 }
+
+
+// GetUserByCedula obtiene un usuario por su cédula
+// @Summary Obtiene un usuario por su cédula
+// @Description Obtiene los datos de un usuario por su cédula
+// @Tags users
+// @Accept json
+// @Produce json
+// @Param Authorization header string true "Bearer token"
+// @Param cedula path string true "Cédula del usuario"
+// @Success 200 {object} models.User
+// @Failure 404 {object} models.ErrorResponse
+// @Router /users/cedula/{cedula} [get]
+// @Security BearerAuth
+func GetUserByCedula(c *gin.Context) {
+	cedula := c.Param("cedula")
+	var user models.User
+	if err := configs.DB.First(&user, "cedula = ?", cedula).Error; err != nil {
+		c.JSON(http.StatusNotFound, models.ErrorResponse{Error: "User not found"})
+		return
+	}
+
+	c.JSON(http.StatusOK, user)
+}
+
+
+// GetUserByAlias obtiene un usuario por su alias
+// @Summary Obtiene un usuario por su alias
+// @Description Obtiene los datos de un usuario por su alias
+// @Tags users
+// @Accept json
+// @Produce json
+// @Param Authorization header string true "Bearer token"
+// @Param alias path string true "Alias del usuario"
+// @Success 200 {object} models.User
+// @Failure 404 {object} models.ErrorResponse
+// @Router /users/alias/{alias} [get]
+// @Security BearerAuth
+func GetUserByAlias(c *gin.Context) {
+	alias := c.Param("alias")
+	var user models.User
+	if err := configs.DB.First(&user, "alias = ?", alias).Error; err != nil {
+		c.JSON(http.StatusNotFound, models.ErrorResponse{Error: "User not found"})
+		return
+	}
+
+	c.JSON(http.StatusOK, user)
+}
+
+// GetUserByTelefono obtiene un usuario por su teléfono
+// @Summary Obtiene un usuario por su teléfono
+// @Description Obtiene los datos de un usuario por su teléfono
+// @Tags users
+// @Accept json
+// @Produce json
+// @Param Authorization header string true "Bearer token"
+// @Param telefono path string true "Teléfono del usuario"
+// @Success 200 {object} models.User
+// @Failure 404 {object} models.ErrorResponse
+// @Router /users/telefono/{telefono} [get]
+// @Security BearerAuth
+func GetUserByTelefono(c *gin.Context) {
+	telefono := c.Param("telefono")
+	var user models.User
+	if err := configs.DB.First(&user, "telefono = ?", telefono).Error; err != nil {
+		c.JSON(http.StatusNotFound, models.ErrorResponse{Error: "User not found"})
+		return
+	}
+
+	c.JSON(http.StatusOK, user)
+}

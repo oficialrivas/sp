@@ -40,3 +40,19 @@ type RefreshTokenRequest struct {
 type UpdateTelegramRequest struct {
     Usuario string `json:"u_telegram" binding:"required"`
 }
+
+
+type IIORequestParams struct {
+	StartDate  string `json:"start_date"`
+	EndDate    string `json:"end_date"`
+	REDI       string `json:"redi,omitempty"`
+	Tie   string `json:"tie,omitempty"`
+	Modalidad  string `json:"modalidad,omitempty"`
+}
+
+type IIORequestParams2 struct {
+	StartDate  string `json:"start_date"`
+	EndDate    string `json:"end_date"`
+	Modalidad  string `json:"modalidad,omitempty"`
+	Valor      *bool  `json:"valor,omitempty"`  // Campo booleano para filtrar
+}

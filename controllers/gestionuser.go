@@ -189,3 +189,5 @@ func GetRecordsCountByUserAndModalidad(c *gin.Context) {
     // Devolver los resultados en formato JSON
     c.JSON(http.StatusOK, results)
 }
+
+
