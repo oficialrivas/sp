@@ -112,6 +112,7 @@ func SetupRouter(r *gin.Engine) {
 		protected.GET("/iios/filter", middleware.RoleRequired("admin", "superuser", "analyst"), controllers.GetIIOs)
 		protected.POST("/gestion/iio", middleware.RoleRequired("admin", "superuser", "analyst"), controllers.GetIIOByParameters)
 		protected.POST("/gestion/iio/modalidad", middleware.RoleRequired("admin", "superuser", "analyst"), controllers.GetIIOByModalidadAndValor)
+		protected.POST("/gestion/iio/modalidad/count", middleware.RoleRequired("admin", "superuser", "analyst"), controllers.GetIIOCountByModalidadAndValor)
 
 		// Configuración de acceso temporal
 		protected.POST("/configuracion/acceso-temporal", middleware.RoleRequired("admin"), controllers.GrantTemporaryAccess)

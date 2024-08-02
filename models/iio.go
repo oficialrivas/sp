@@ -15,7 +15,7 @@ type IIO struct {
 	REDI         string      `json:"redi"`
 	ZODI         string      `json:"zodi"`
 	ADI          string      `json:"adi"`
-	Modalidad    []Modalidad `gorm:"many2many:iio_modalidades;" json:"modalidad"`
+	Modalidad    []Modalidad `gorm:"many2many:iio_modalidad;" json:"modalidad"`
 	Tie          []Tie       `gorm:"many2many:iio_ties;" json:"TIE"`
 	Fecha        time.Time   `json:"fecha"`
 	Lugar        string      `json:"lugar"`

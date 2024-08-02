@@ -441,3 +441,95 @@ func GetIIOByModalidadAndValor(c *gin.Context) {
 	// Devolver los resultados en formato JSON
 	c.JSON(http.StatusOK, iios)
 }
+
+// GetIIOCountByModalidadAndValor obtiene el número de registros de IIO por modalidad y valor
+// @Summary Obtiene el número de registros de IIO por modalidad y valor
+// @Description Recupera el número de registros de IIO en un período determinado, según los parámetros modalidad y valor ingresados por el usuario
+// @Security ApiKeyAuth
+// @Param Authorization header string true "Bearer token"
+// @Tags iio
+// @Accept json
+// @Produce json
+// @Param request body models.IIORequestParams3 true "Parámetros de consulta"
+// @Success 200 {object} map[string]interface{} "result"
+// @Failure 400 {object} map[string]string "error"
+// @Failure 500 {object} map[string]string "error"
+// @Router /gestion/iio/modalidad/count [post]
+func GetIIOCountByModalidadAndValor(c *gin.Context) {
+	var params models.IIORequestParams3
+	if err := c.ShouldBindJSON(&params); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	// Parsear las fechas de los parámetros
+	startDate, err := time.Parse("2006-01-02", params.StartDate)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Formato de fecha inválido para start_date"})
+		return
+	}
+
+	endDate, err := time.Parse("2006-01-02", params.EndDate)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Formato de fecha inválido para end_date"})
+		return
+	}
+
+	// Validar que startDate no sea posterior a endDate
+	if startDate.After(endDate) {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "start_date no puede ser posterior a end_date"})
+		return
+	}
+
+	// Crear una subconsulta para obtener los IDs de IIOs con la modalidad especificada
+	var iioIDs []uuid.UUID
+	if err := configs.DB.Table("iio_modalidad").
+		Select("iio_id").
+		Joins("JOIN modalidad ON modalidad.id = iio_modalidad.modalidad_id").
+		Where("modalidad.nombre = ?", params.Modalidad).
+		Pluck("iio_id", &iioIDs).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	if len(iioIDs) == 0 {
+		// Si no hay IDs de IIOs con la modalidad especificada, devolver conteos de 0
+		c.JSON(http.StatusOK, map[string]interface{}{
+			"count_true":  0,
+			"count_false": 0,
+		})
+		return
+	}
+
+	fmt.Printf("IIO IDs: %v\n", iioIDs)
+
+	// Contar registros con Valor en true
+	var countTrue int64
+	if err := configs.DB.Model(&models.IIO{}).
+		Where("created_at BETWEEN ? AND ?", startDate, endDate).
+		Where("id IN (?)", iioIDs).
+		Where("valor = ?", true).
+		Count(&countTrue).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	// Contar registros con Valor en false
+	var countFalse int64
+	if err := configs.DB.Model(&models.IIO{}).
+		Where("created_at BETWEEN ? AND ?", startDate, endDate).
+		Where("id IN (?)", iioIDs).
+		Where("valor = ?", false).
+		Count(&countFalse).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	// Devolver los resultados en formato JSON
+	result := map[string]interface{}{
+		"count_true":  countTrue,
+		"count_false": countFalse,
+	}
+
+	c.JSON(http.StatusOK, result)
+}

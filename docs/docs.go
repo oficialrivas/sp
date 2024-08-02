@@ -1785,6 +1785,71 @@ const docTemplate = `{
                 }
             }
         },
+        "/gestion/iio/modalidad/count": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Recupera el número de registros de IIO en un período determinado, según los parámetros modalidad y valor ingresados por el usuario",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "iio"
+                ],
+                "summary": "Obtiene el número de registros de IIO por modalidad y valor",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Bearer token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "description": "Parámetros de consulta",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.IIORequestParams3"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "result",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "400": {
+                        "description": "error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/gestion/por-area": {
             "post": {
                 "description": "Obtiene el número de registros por área en un período determinado",
@@ -6598,6 +6663,20 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "tie": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.IIORequestParams3": {
+            "type": "object",
+            "properties": {
+                "end_date": {
+                    "type": "string"
+                },
+                "modalidad": {
+                    "type": "string"
+                },
+                "start_date": {
                     "type": "string"
                 }
             }

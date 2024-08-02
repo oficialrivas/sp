@@ -480,6 +480,15 @@ definitions:
       tie:
         type: string
     type: object
+  models.IIORequestParams3:
+    properties:
+      end_date:
+        type: string
+      modalidad:
+        type: string
+      start_date:
+        type: string
+    type: object
   models.LoginRequest:
     properties:
       correo:
@@ -2056,6 +2065,49 @@ paths:
       security:
       - ApiKeyAuth: []
       summary: Obtiene registros de IIO por modalidad y valor
+      tags:
+      - iio
+  /gestion/iio/modalidad/count:
+    post:
+      consumes:
+      - application/json
+      description: Recupera el número de registros de IIO en un período determinado,
+        según los parámetros modalidad y valor ingresados por el usuario
+      parameters:
+      - description: Bearer token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: Parámetros de consulta
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/models.IIORequestParams3'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: result
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - ApiKeyAuth: []
+      summary: Obtiene el número de registros de IIO por modalidad y valor
       tags:
       - iio
   /gestion/por-area:

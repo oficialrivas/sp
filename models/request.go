@@ -56,3 +56,10 @@ type IIORequestParams2 struct {
 	Modalidad  string `json:"modalidad,omitempty"`
 	Valor      *bool  `json:"valor,omitempty"`  // Campo booleano para filtrar
 }
+
+
+type IIORequestParams3 struct {
+	StartDate string `json:"start_date"`
+	EndDate   string `json:"end_date"`
+	Modalidad string `json:"modalidad,omitempty"`
+}
